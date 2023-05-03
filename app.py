@@ -207,3 +207,60 @@ def form_add_model():
     return render_template(session['role'] + "/form_add_model.html",
                            model_infos = model_info_choice,
                            data_group = data_group)
+    
+    
+# ---- ADMIN ONLY ----
+@app.route("/view_data_train", methods=['GET','POST'])
+def view_data_train():
+    # View du lieu trong bang data train
+    return None
+
+@app.route("/view_data_group_info", methods=['GET','POST'])
+def view_data_group_info():
+    return None
+
+@app.route("/view_one_group_info/<string:id_dgroup>_<string:mode>", methods=['GET','POST'])
+def view_one_group_info(id_dgroup, mode):
+    # pie chart: %ham, %spam
+    # bar plot: word frequency for ham and spam label
+    # table for statistic model
+    # word cloud
+    return None
+
+@app.route("/view_model_info", methods=['GET','POST'])
+def view_model_info():
+    return None
+
+@app.route("/view_model_train_state", methods=['GET','POST'])
+def view_model_train_state():
+    return None
+
+@app.route("/view_one_model_train_state/<string:id_train>_<string:mode>", methods=['GET','POST'])
+def view_one_model_train_state(id_train, mode):
+    return None
+
+@app.route("/view_data_group/<string:group_id>_<string:mode>", methods=['GET','POST'])
+def view_data_group(group_id, mode):
+    return None
+
+@app.route("/check_data_input", methods=['GET','POST'])
+def check_data_input():
+    return None
+
+@app.route("/view_account", methods=['GET','POST'])
+def view_account():
+    return None
+
+@app.route("/form_add_account", methods=['GET','POST'])
+def form_add_account():
+    return None
+
+@app.route("/form_add_data_train", methods=['GET','POST'])
+def form_add_data_train():
+    return None
+
+@app.route("/change_to_data_train/<string:id_data_input>", methods=['GET','POST'])
+def change_to_data_train(id_data_input):
+    return None
+
+# ---- ADMIN ONLY ----
