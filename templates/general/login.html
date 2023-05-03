@@ -1,0 +1,44 @@
+<form method="post" action="/login">
+    <span >
+        <b>ĐĂNG NHẬP HỆ THỐNG</b>
+    </span>
+
+    <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
+        <div>
+            {% if user_exits == 'False' %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <strong>Tài khoản không tồn tại!</strong> Nhập lại tài khoản
+            </div>
+            {% endif %}
+
+            {% if user_exits == 'True' and pass_check=='False' %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>Nhập lại mật khẩu!</strong>
+            </div>
+            {% endif %}
+        </div>
+
+    
+        <div>
+            <input type="text" placeholder="Tài khoản" name="username"
+                id="username">
+        </div>
+
+        <div >
+            <input autocomplete="off" type="password" placeholder="Mật khẩu"
+                name="current-password" id="password-field">
+        </div>
+
+        <!--=====ĐĂNG NHẬP======-->
+        <div>
+            <input type="submit" value="Đăng nhập" id="submit" />
+        </div>
+        <!--=====LINK TÌM MẬT KHẨU======-->
+        <div>
+            <a href="/forgot">
+                Bạn quên mật khẩu?
+            </a>
+        </div>
+</form>
