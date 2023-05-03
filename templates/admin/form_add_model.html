@@ -1,0 +1,58 @@
+<form method="post" action="/form_add_model" enctype ="multipart/form-data">
+    <span >
+        <b>Thêm mô hình</b>
+    </span>
+
+    <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
+        <div>
+            {% if err_code %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <strong>{{ err_code }}</strong> 
+            </div>
+            {% endif %}
+        </div>
+
+        <div >
+            <label>Thông tin mô hình</label>
+            <select id="model_info" name="model_info">
+              {% for data in model_infos %}
+
+              <option> {{data}} </option>
+
+              {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Upload model file</label>
+            <input type="file" style="height:45px;" id="FileModelUpload" name="FileModelUpload" class="form-control" id="customFile" />
+        </div>
+
+        <div >
+            <label>Thông tin dữ liệu</label>
+            <select id="info_data" name="info_data">
+              {% for data in data_group %}
+
+              <option> {{data[1]}} </option>
+
+              {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Thời gian huấn luyện</label>
+            <input type="text" title="Thời gian huấn luyện" name="time_train"
+                id="time_train" pattern="[+-]?([0-9]*[.])?[0-9]+">
+        </div>
+
+        <div>
+            <label class="control-label">Có thể sử dụng</label>
+            <input type="checkbox" name="can_use" id="can_use">
+        </div>
+
+        <!--=====ĐĂNG NHẬP======-->
+        <div>
+            <input type="submit" value="Lưu" id="submit" />
+        </div>
+</form>

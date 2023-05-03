@@ -24,11 +24,16 @@ app = Flask(__name__)
 app.secret_key = 'La Nam'
 
 MODEL_FOLDER = 'static/model/'
+TFIDF_FOLDER = 'static/tfidf/'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'smsspamproject'
+
+# Static folder
+app.config['MODEL_FOLDER'] = MODEL_FOLDER
+app.config['TFIDF_FOLDER'] = TFIDF_FOLDER
 
 mysql = MySQL(app)
 
@@ -100,6 +105,105 @@ def register_account():
 def home():
     return render_template(session['role'] + '/home.html')
 
+@app.route("/form_add_data_group_info", methods=['GET','POST'])
+def form_add_data_group_info():
+    cur = mysql.connection.cursor()
+    
+    if request.method == 'POST':
+        details = request.form
+        group_name = details['group_name']
+        test_size = details['test_size']
+        
+        if 'FileTFIDFUpload' not in request.files.keys():
+            return "Error 1"
+        else:
+            tfidf_file = request.files['FileTFIDFUpload']
+            
+        sql = """
+            SELECT MAX(id_dgroup)
+            FROM data_group_info
+        """
+        cur.execute(sql)
+        id_max = cur.fetchall()
+        if (id_max[0][0] == None):
+            id_max = 1
+        else:
+            id_max = int(id_max[0][0]) + 1
+            
+        # file processing
+        if tfidf_file.filename != '':
+            if tfidf_file.filename.split(".")[-1] != 'pickle':
+                return "Error"
+            pathToFile = app.config['TFIDF_FOLDER'] + "/tfidf_" + str(id_max) + ".pickle"
+            tfidf_file.save(pathToFile)
+            
+        sql = """
+            INSERT INTO data_group_info(group_name,
+            tfidf_path, test_size) VALUES (%s, %s, %s)
+        """
+        cur.execute(sql, (group_name, pathToFile, test_size))
+        mysql.connection.commit()
+    return render_template(session['role'] + "/form_add_data_group_info.html")
+
 @app.route("/form_add_model", methods=['GET','POST'])
 def form_add_model():
-    return render_template(session['role'] + "/form_add_model.html")
+    cur = mysql.connection.cursor()
+    
+    sql = """
+        SELECT *
+        FROM model_info
+    """
+    cur.execute(sql)
+    model_infos = cur.fetchall()
+    model_info_choice = []
+    for elm in model_infos:
+        tmp = " - ".join(list(elm[1:]))
+        model_info_choice.append(tmp)
+        
+    sql = """
+        SELECT id_dgroup, group_name
+        FROM data_group_info
+    """
+    cur.execute(sql)
+    data_group = cur.fetchall()
+    
+    if request.method == 'POST':
+        details = request.form
+        if 'FileModelUpload' not in request.files.keys():
+            return "Error 1"
+        else:
+            model_file = request.files['FileModelUpload']
+        time_train = details['time_train']
+        can_use = 1 if 'can_use' in details.keys() else 0
+        
+        # find id
+        sql = """
+            SELECT MAX(id_train)
+            FROM model_train_state
+        """
+        cur.execute(sql)
+        id_max = cur.fetchall()
+        if (id_max[0][0] == None):
+            id_max = 1
+        else:
+            id_max = id_max[0][0] + 1
+        
+        # file processing
+        if model_file.filename != '':
+            if model_file.filename.split(".")[-1] != 'pickle':
+                return "Error 2"
+            pathToFile = app.config['MODEL_FOLDER'] + "/model_" + str(id_max) + ".pickle"
+            model_file.save(pathToFile)
+            
+        sql = """
+            INSERT INTO model_train_state(id_train, id_dgroup,
+            path_to_state, can_use, time_train,
+            create_by, update_by)  VALUES 
+            (%s, %s, %s, %s, %s, %s, %s)
+        """
+            
+        return redirect(url_for("home"))
+    
+    return render_template(session['role'] + "/form_add_model.html",
+                           model_infos = model_info_choice,
+                           data_group = data_group)
