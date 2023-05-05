@@ -1,0 +1,19 @@
+Số bản ghi trong nhóm dữ liệu {{group_info[1]}} là {{num_rows}}
+
+<div id='chart_pie' class='chart_pie'
+ style="height: 400px; width: 50%px; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<div id='chart_distribution' class='chart_distribution'
+ style="height: 400px; width: 100%; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+<script type='text/javascript'>
+    var graphs = {{graphJSON_pie | safe}};
+    Plotly.plot('chart_pie',graphs,{});
+
+    var graphs_1 = {{graphJSON_distribution | safe}};
+    Plotly.plot('chart_distribution',graphs_1,{});
+  </script></html>

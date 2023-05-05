@@ -19,10 +19,15 @@ import functools
 import pdfkit
 import re
 import math
+import json
 
-# check merge kien
+# plot
+import plotly
+import plotly.express as px
+import plotly.figure_factory as ff
 
-# Check merge nam
+# import module
+from data_model_process import *
 
 app = Flask(__name__)
 app.secret_key = 'La Nam'
@@ -237,13 +242,81 @@ def view_data_group_info():
 
     return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos)
 
-@app.route("/view_one_group_info/<string:id_dgroup>_<string:mode>", methods=['GET','POST'])
-def view_one_group_info(id_dgroup, mode):
+@app.route("/view_one_group_info/<string:id_dgroup>", methods=['GET','POST'])
+def view_one_group_info(id_dgroup):
     # pie chart: %ham, %spam
     # bar plot: word frequency for ham and spam label
     # table for statistic model
     # word cloud
-    return None
+    # M: Modify
+    # R: Read
+    
+    cur = mysql.connection.cursor()
+    
+    # check exist group id
+    cur.execute("""
+                SELECT id_dgroup, group_name
+                FROM data_group_info
+                WHERE id_dgroup = %s
+                """, (id_dgroup, ))
+    check_exist = cur.fetchall()
+    if len(check_exist) == 0:
+        return "Error"
+    
+    sql = """
+        SELECT dt.text, dt.class_id, c.label
+        FROM data_train dt 
+        JOIN class c ON dt.class_id = c.class_id
+        WHERE dt.id_dtrain IN (
+            SELECT dgs.id_dtrain
+            FROM data_group_split dgs
+            WHERE dgs.id_dgroup = %s
+        )
+    """
+    cur.execute(sql, (id_dgroup, ))
+    records = cur.fetchall()
+    if len(records) == 0:
+        return "Error"
+    
+    columnName = ['Text', 'Class', 'Label']
+    data = pd.DataFrame.from_records(records, columns=columnName)
+    
+    # Metadata
+    num_rows = data.shape[0]
+    
+    # for pie chart
+    df2 = data.apply(lambda x : True
+            if x['Class'] == 1 else False, axis = 1)
+    count_spam = len(df2[df2 == True].index)
+    count_ham = len(df2[df2 == False].index)
+    df2 = pd.DataFrame({
+        "Label": ["Spam","Ham"],
+        "Count": [count_spam, count_ham]
+    })
+    
+    fig_pie = px.pie(df2, values='Count', names='Label', title='Percent of Spam and Ham ' + check_exist[0][1])
+    graphJSON_pie = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
+    del df2
+    del count_ham
+    del count_spam
+    del fig_pie
+    
+    # for distribution of length spam
+    colors = ['slategray', 'magenta']
+    text_words_spam = data[data["Class"] == 1]["Text"].str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # spam
+    text_words_ham = data[data["Class"] == 0]["Text"].str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # ham
+    fig_spam_distribution = ff.create_distplot([text_words_spam, text_words_ham],
+                                               ['Spam','Ham'],
+                                               curve_type='normal',
+                                               colors=colors)
+    fig_spam_distribution.update_layout(title_text="Distribution of average word length in texts where target is 'spam' and 'ham'")
+    graphJSON_distribution = json.dumps(fig_spam_distribution, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    return render_template(session['role'] + "/view_one_group_info.html",
+                           graphJSON_pie = graphJSON_pie,
+                           graphJSON_distribution = graphJSON_distribution,
+                           num_rows = num_rows,
+                           group_info = check_exist[0])
 
 @app.route("/view_model_info", methods=['GET','POST'])
 def view_model_info():
@@ -257,9 +330,9 @@ def view_model_train_state():
 def view_one_model_train_state(id_train, mode):
     return None
 
-@app.route("/view_data_group/<string:group_id>_<string:mode>", methods=['GET','POST'])
-def view_data_group(group_id, mode):
-    return None
+# @app.route("/view_data_group/<string:group_id>_<string:mode>", methods=['GET','POST'])
+# def view_data_group(group_id, mode):
+#     return None
 
 @app.route("/check_data_input", methods=['GET','POST'])
 def check_data_input():
@@ -299,7 +372,13 @@ def form_add_data_train():
         sql_check_group = "SELECT * FROM data_group_split WHERE id_dtrain = %s AND id_dgroup = %s"
         sql_insert_group = "INSERT INTO data_group_split(id_dtrain, id_dgroup) VALUES (%s, %s)"
         
-        id_exists = list(set(",".join(list(data['group_ids'].values)).split(",")))
+        data['group_ids'] = data['group_ids'].astype(str)
+        
+        if len(list(set(data['group_ids'].values))) != 1:
+            id_exists = list(set(",".join(list(data['group_ids'].values)).split(",")))
+        else:
+            id_exists = list(set(data['group_ids'].values))
+            
         for elm in id_exists:
             # check group_id exist
             cur.execute("""
@@ -313,8 +392,11 @@ def form_add_data_train():
 
         for i in range(data.shape[0]):
             label = data['Target'][i]
-            text = data['corpus'][i]
+            text = str(data['corpus'][i])
             group_ids = data['group_ids'][i]
+            
+            if len(text) == 0:
+                continue
             
             # check if text is in database
             # if exist -> insert + take id
