@@ -20,6 +20,8 @@ import pdfkit
 import re
 import math
 
+# check merge kien
+
 app = Flask(__name__)
 app.secret_key = 'La Nam'
 
