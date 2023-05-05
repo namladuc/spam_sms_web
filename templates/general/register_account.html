@@ -1,0 +1,23 @@
+<form action="/register_account" method="post">
+    <label for="username">User Name</label><br>
+    <input type="text" id="username" name="username"><br>
+    <label for="fullname">Full name</label><br>
+    <input type="text" id="fullname" name="fullname"><br><br>
+    <label for="password">Mật khẩu:</label><br>
+    <input type="password" id="password" name="password"><br>
+    <label for="confirm_password">Nhập lại mật khẩu:</label><br>
+    <input type="password" id="confirm_password" name="confirm_password"><br><br>
+    <input type="submit" value="Tạo">
+</form>
+<div>
+    {% if error %}
+		<div id="error-message">
+			{{ error }}
+		</div>
+	{% endif %}
+	{% if message %}
+		<div id="success-message">
+			{{ message }}
+		</div>
+	{% endif %}
+</div>
