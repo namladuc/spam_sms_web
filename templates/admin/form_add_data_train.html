@@ -1,0 +1,24 @@
+<form method="post" action="/form_add_data_train" enctype ="multipart/form-data">
+    <span >
+        <b>Thêm dữ liệu train từ file</b>
+    </span>
+
+        <div>
+            {% if err_code %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <strong>{{ err_code }}</strong> 
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label class="control-label">Upload data train file</label>
+            <input type="file" style="height:45px;" id="FileDataTrainUpload" name="FileDataTrainUpload" class="form-control" id="customFile" />
+        </div>
+
+        <!--=====ĐĂNG NHẬP======-->
+        <div>
+            <input type="submit" value="Thêm" id="submit" />
+        </div>
+</form>
