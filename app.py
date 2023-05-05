@@ -225,9 +225,17 @@ def view_data_train():
     # View du lieu trong bang data train
     return None
 
-@app.route("/view_data_group_info", methods=['GET','POST'])
+@app.route("/view_data_group_info")
 def view_data_group_info():
-    return None
+    cur = mysql.connection.cursor()
+    sql = """
+            SELECT *
+            FROM data_group_info
+        """
+    cur.execute(sql)
+    dgroup_infos = cur.fetchall()
+
+    return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos)
 
 @app.route("/view_one_group_info/<string:id_dgroup>_<string:mode>", methods=['GET','POST'])
 def view_one_group_info(id_dgroup, mode):
