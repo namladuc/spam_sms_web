@@ -20,6 +20,8 @@ import pdfkit
 import re
 import math
 
+# Check merge nam
+
 app = Flask(__name__)
 app.secret_key = 'La Nam'
 
@@ -48,7 +50,7 @@ def login_required(func): # need for all router
 @app.route("/")
 @app.route("/login", methods=['GET','POST'])
 def login():
-    if 'username' in session.keys():
+    if 'role' in session.keys():
         return redirect(url_for("home"))
     
     cur = mysql.connection.cursor()
@@ -257,7 +259,8 @@ def form_add_account():
 
 @app.route("/form_add_data_train", methods=['GET','POST'])
 def form_add_data_train():
-    return None
+    
+    return render_template(session['role'] + "/form_add_data_train.html")
 
 @app.route("/change_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def change_to_data_train(id_data_input):
