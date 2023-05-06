@@ -239,17 +239,43 @@ def form_add_model():
         if model_file.filename != '':
             if model_file.filename.split(".")[-1] != 'pickle':
                 return "Error 2"
-            pathToFile = app.config['MODEL_FOLDER'] + "/model_" + str(id_max) + ".pickle"
+            pathToFile = app.config['MODEL_FOLDER'] + "model_" + str(id_max) + ".pickle"
             model_file.save(pathToFile)
+            
+        # take id_dgroup
+        id_data_choice = details['info_data']
+        for elm in data_group:
+            if id_data_choice == elm[1]:
+                id_data_choice = elm[0]
+                break
+            
+        # accuracy model
+        acc_model_train = details['acc_model_train']
+        acc_model_test = details['acc_model_test']
             
         sql = """
             INSERT INTO model_train_state(id_train, id_dgroup,
-            path_to_state, can_use, time_train, accuracy_model,
+            path_to_state, can_use, time_train, accuracy_model_train, accuracy_model_test,
             create_by, update_by)  VALUES 
-            (%s, %s, %s, %s, %s, %s, %s, %s)
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         
-        cur.execute(sql, (id_max, ))
+        cur.execute(sql, (id_max, id_data_choice, pathToFile,
+                          can_use, time_train, acc_model_train, acc_model_test, session['username'][1],
+                          session['username'][1]))
+        mysql.connection.commit()
+        
+        # model train table 
+        model_info = details['model_info']
+        for i in range(len(model_info_choice)):
+            if model_info == model_info_choice[i]:
+                model_info = model_infos[i][0]
+        
+        cur.execute("""
+                    INSERT INTO model_train(id_train, id_model)
+                    VALUES (%s, %s)
+                    """, (id_max, model_info))
+        mysql.connection.commit()
             
         return redirect(url_for("home"))
     
@@ -373,7 +399,7 @@ def view_one_group_info(id_dgroup):
                                y='Word',
                                x='Count',
                                color='Word',
-                               text_auto='.3s',
+                               text_auto='2s.',
                                title="Top 15 common words in label `Spam`")
     graphJSON_15_count_spam = json.dumps(fig_count_in_spam, cls=plotly.utils.PlotlyJSONEncoder)
     count_in_ham = get_dict_count(data=data, class_of_label=0)
@@ -381,17 +407,88 @@ def view_one_group_info(id_dgroup):
                                y='Word',
                                x='Count',
                                color='Word',
-                               text_auto='.3s',
+                               text_auto='2s.',
                                title="Top 15 common words in label `Ham`")
     graphJSON_15_count_ham = json.dumps(fig_count_in_ham, cls=plotly.utils.PlotlyJSONEncoder)
+    del count_in_spam
+    del count_in_ham
     
-    
+    # bar plot for statistic model
+    cur.execute("""SELECT CONCAT(mts.id_train, " ", mi.model_name, " ", model_class),
+                mts.id_dgroup, can_use, time_train, accuracy_model_train
+                FROM model_train_state mts
+                JOIN model_train mt ON mts.id_train = mt.id_train
+                JOIN model_info mi ON mi.id_model = mt.id_model
+                WHERE id_dgroup = %s
+                ORDER BY accuracy_model_train DESC
+                LIMIT 5""", 
+                (id_dgroup, ))
+    records = cur.fetchall()
+    columnName = ['info_name', 'id_dgroup', 'can_use', 'time_train', 'accuracy_model_train']
+    data_models = pd.DataFrame.from_records(records, columns=columnName)
+    fig_acc_train = px.bar(data_models,
+                    y='info_name',
+                    x='accuracy_model_train',
+                    color='info_name',
+                    text='accuracy_model_train',
+                    title="Top 5 model with high accuracy train dataset")
+    fig_acc_train.update_layout(xaxis_title="Accuracy score",
+                                yaxis_title="Model name",
+                                legend_title="Model name")
+    graphJSON_acc_train = json.dumps(fig_acc_train, cls=plotly.utils.PlotlyJSONEncoder)
+    cur.execute("""SELECT CONCAT(mts.id_train, " ", mi.model_name, " ", model_class),
+                mts.id_dgroup, can_use, time_train, accuracy_model_test
+                FROM model_train_state mts
+                JOIN model_train mt ON mts.id_train = mt.id_train
+                JOIN model_info mi ON mi.id_model = mt.id_model
+                WHERE id_dgroup = %s
+                ORDER BY accuracy_model_test DESC
+                LIMIT 5""", 
+                (id_dgroup, ))
+    records = cur.fetchall()
+    columnName = ['info_name', 'id_dgroup', 'can_use', 'time_train', 'accuracy_model_test']
+    data_models = pd.DataFrame.from_records(records, columns=columnName)
+    fig_acc_test = px.bar(data_models,
+                    y='info_name',
+                    x='accuracy_model_test',
+                    color='info_name',
+                    text='accuracy_model_test',
+                    title="Top 5 model with high accuracy test dataset")
+    fig_acc_test.update_layout(xaxis_title="Accuracy score",
+                                yaxis_title="Model name",
+                                legend_title="Model name")
+    graphJSON_acc_test = json.dumps(fig_acc_test, cls=plotly.utils.PlotlyJSONEncoder)
+    cur.execute("""SELECT CONCAT(mts.id_train, " ", mi.model_name, " ", model_class),
+                mts.id_dgroup, can_use, time_train, accuracy_model_test
+                FROM model_train_state mts
+                JOIN model_train mt ON mts.id_train = mt.id_train
+                JOIN model_info mi ON mi.id_model = mt.id_model
+                WHERE id_dgroup = %s
+                ORDER BY time_train ASC
+                LIMIT 5""", 
+                (id_dgroup, ))
+    records = cur.fetchall()
+    columnName = ['info_name', 'id_dgroup', 'can_use', 'time_train', 'accuracy_model_test']
+    data_models = pd.DataFrame.from_records(records, columns=columnName)
+    fig_time_train = px.bar(data_models,
+                    y='info_name',
+                    x='time_train',
+                    color='info_name',
+                    text='time_train',
+                    title="Top 5 model with high fastest training time")
+    fig_time_train.update_layout(xaxis_title="Time training (s)",
+                                yaxis_title="Model name",
+                                legend_title="Model name")
+    graphJSON_time_train= json.dumps(fig_time_train, cls=plotly.utils.PlotlyJSONEncoder)
     
     return render_template(session['role'] + "/view_one_group_info.html",
                            graphJSON_pie = graphJSON_pie,
                            graphJSON_distribution = graphJSON_distribution,
                            graphJSON_15_count_spam = graphJSON_15_count_spam,
                            graphJSON_15_count_ham = graphJSON_15_count_ham,
+                           graphJSON_acc_train = graphJSON_acc_train,
+                           graphJSON_acc_test = graphJSON_acc_test,
+                           graphJSON_time_train = graphJSON_time_train,
                            num_rows = num_rows,
                            group_info = check_exist[0])
 
@@ -553,3 +650,97 @@ def change_to_data_train(id_data_input):
     return None
 
 # ---- ADMIN ONLY ----
+
+# User using model
+@app.route("/is_spam_or_ham", methods=['GET','POST'])
+@app.route("/is_spam_or_ham/<string:id_train>", methods=['GET','POST'])
+def is_spam_or_ham(id_train = ''):
+    cur = mysql.connection.cursor()
+    
+    cur.execute("""
+                SELECT mts.id_train, CONCAT(mts.id_train, "-",mi.model_name)
+                FROM model_train_state mts
+                JOIN model_train mt ON mt.id_train = mts.id_train
+                JOIN model_info mi ON mi.id_model = mt.id_model
+                WHERE can_use = 1
+                """)
+    model_trains = cur.fetchall()
+    if len(model_trains) == 0:
+        return "Error"
+    
+    if id_train == '':
+        id_train = model_trains[0][0]
+    
+    if request.method == 'POST':
+        details = request.form
+        model_train_id = details['model_train_id']
+        text_input = details['text_input'].strip()
+        
+        if len(text_input) == 0:
+            return redirect(url_for("is_spam_or_ham", id_train = id_train))
+        
+        return redirect(url_for("is_spam_or_ham_result", id_train = model_train_id, text = text_input))
+    
+    model_trains_list = []
+    for i in range(len(model_trains)):
+        if str(model_trains[i][0]) == str(id_train):
+            model_trains_list.insert(0, model_trains[i])
+        else:
+            model_trains_list.append(model_trains[i])
+    
+    return render_template(session['role'] + "/is_spam_or_ham.html",
+                           model_trains = model_trains_list,
+                           id_train = id_train)
+     
+    
+    
+@app.route("/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
+def is_spam_or_ham_result(id_train, text):
+    cur = mysql.connection.cursor()
+    
+    cur.execute("""
+                SELECT tfidf_path, path_to_state
+                FROM model_train_state mts
+                JOIN data_group_info dgi ON dgi.id_dgroup = mts.id_dgroup
+                WHERE mts.id_train = %s
+                """, (id_train, ))
+    tfidf_path = cur.fetchall()
+    
+    if len(tfidf_path) == 0:
+        return "Error"
+    
+    path_to_state = tfidf_path[0][1]
+    tfidf_path = tfidf_path[0][0]
+    
+    step_index = [elm for elm in range(5)]
+    
+    step_title = [
+        "Cleaning : Replacing all non-alphabetic, converting to lowecase",
+        "Tokenize",
+        "Remove stopwords",
+        "Lemmatize",
+        "Join tokenize to text"
+    ]
+    
+    step_data = []
+    step_data.append(step_1_clean(text))
+    step_data.append(step_2_tokenize(step_data[-1]))
+    step_data.append(step_3_remove_stopwords(step_data[-1]))
+    step_data.append(step_4_lemmatizer(step_data[-1]))
+    step_data.append(step_5_join_text(step_data[-1]))
+    
+    input_data = step_6_numerize(step_data[-1], tfidf_path)
+    
+    y_pred = predict_model_sklearn(path_to_state, input_data)
+    
+    if y_pred == 1:
+        y_pred = "Spam"
+    else:
+        y_pred = "Ham"
+    
+    return render_template(session['role'] + "/is_spam_or_ham_result.html",
+                           label_pred = y_pred,
+                           step_index = step_index,
+                           step_data = step_data,
+                           step_title = step_title,
+                           id_train = id_train)
