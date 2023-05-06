@@ -1,11 +1,23 @@
 Số bản ghi trong nhóm dữ liệu {{group_info[1]}} là {{num_rows}}
 
 <div id='chart_pie' class='chart_pie'
- style="height: 400px; width: 50%px; border: 1px solid; 
+ style="height: 400px; width: 50%; border: 1px solid; 
 box-shadow: 5px 5px 5px #888888;"></div>
 
+<br>
+
 <div id='chart_distribution' class='chart_distribution'
- style="height: 400px; width: 100%; border: 1px solid; 
+ style="height: 100%; width: 100%; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<br>
+
+<div id='graphs_15_spam' class='graphs_15_spam'
+ style="height: 100%; width: 100%; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<div id='graphs_15_ham' class='graphs_15_ham'
+ style="height: 100%; width: 100%; border: 1px solid; 
 box-shadow: 5px 5px 5px #888888;"></div>
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
@@ -16,4 +28,10 @@ box-shadow: 5px 5px 5px #888888;"></div>
 
     var graphs_1 = {{graphJSON_distribution | safe}};
     Plotly.plot('chart_distribution',graphs_1,{});
+
+    // graphJSON_15_count_spam
+    var graphs_15_spam = {{graphJSON_15_count_spam | safe}};
+    Plotly.plot('graphs_15_spam',graphs_15_spam,{});
+    var graphs_15_ham = {{graphJSON_15_count_ham | safe}};
+    Plotly.plot('graphs_15_ham',graphs_15_ham,{});
   </script></html>
