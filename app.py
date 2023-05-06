@@ -220,6 +220,7 @@ def form_add_model():
         else:
             model_file = request.files['FileModelUpload']
         time_train = details['time_train']
+        acc_model = details['acc_model']
         can_use = 1 if 'can_use' in details.keys() else 0
         
         # find id
@@ -243,10 +244,12 @@ def form_add_model():
             
         sql = """
             INSERT INTO model_train_state(id_train, id_dgroup,
-            path_to_state, can_use, time_train,
+            path_to_state, can_use, time_train, accuracy_model,
             create_by, update_by)  VALUES 
-            (%s, %s, %s, %s, %s, %s, %s)
+            (%s, %s, %s, %s, %s, %s, %s, %s)
         """
+        
+        cur.execute(sql, (id_max, ))
             
         return redirect(url_for("home"))
     
@@ -344,18 +347,51 @@ def view_one_group_info(id_dgroup):
     
     # for distribution of length spam
     colors = ['slategray', 'magenta']
-    text_words_spam = data[data["Class"] == 1]["Text"].str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # spam
-    text_words_ham = data[data["Class"] == 0]["Text"].str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # ham
+    text_words_spam = data[data["Class"] == 1]["Text"].apply(len) #str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # spam
+    text_words_ham = data[data["Class"] == 0]["Text"].apply(len) #str.split().apply(lambda x : [len(i) for i in x]).map(lambda x: np.mean(x)) # ham
     fig_spam_distribution = ff.create_distplot([text_words_spam, text_words_ham],
                                                ['Spam','Ham'],
                                                curve_type='normal',
                                                colors=colors)
-    fig_spam_distribution.update_layout(title_text="Distribution of average word length in texts where target is 'spam' and 'ham'")
+    fig_spam_distribution.update_layout(title_text="Distribution of word length in texts where target is 'spam' and 'ham'")
+    fig_spam_distribution.update_layout(xaxis_title="Length of Message",
+                                        yaxis_title="Probability of distribution",
+                                        legend_title="Type of sms",
+                                        font=dict(
+                                            size=14,
+                                            )
+                                        )
     graphJSON_distribution = json.dumps(fig_spam_distribution, cls=plotly.utils.PlotlyJSONEncoder)
+    del colors
+    del text_words_ham
+    del text_words_spam
+    del fig_spam_distribution
+    
+    # for bar chart
+    count_in_spam = get_dict_count(data=data, class_of_label=1)
+    fig_count_in_spam = px.bar(count_in_spam,
+                               y='Word',
+                               x='Count',
+                               color='Word',
+                               text_auto='.3s',
+                               title="Top 15 common words in label `Spam`")
+    graphJSON_15_count_spam = json.dumps(fig_count_in_spam, cls=plotly.utils.PlotlyJSONEncoder)
+    count_in_ham = get_dict_count(data=data, class_of_label=0)
+    fig_count_in_ham = px.bar(count_in_ham,
+                               y='Word',
+                               x='Count',
+                               color='Word',
+                               text_auto='.3s',
+                               title="Top 15 common words in label `Ham`")
+    graphJSON_15_count_ham = json.dumps(fig_count_in_ham, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    
     
     return render_template(session['role'] + "/view_one_group_info.html",
                            graphJSON_pie = graphJSON_pie,
                            graphJSON_distribution = graphJSON_distribution,
+                           graphJSON_15_count_spam = graphJSON_15_count_spam,
+                           graphJSON_15_count_ham = graphJSON_15_count_ham,
                            num_rows = num_rows,
                            group_info = check_exist[0])
 
