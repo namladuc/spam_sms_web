@@ -1,0 +1,47 @@
+.text {
+    font-size: 12px;
+    text-align: center;
+}
+.text--sucess {
+    border-color: #47d864;
+    background-color: #47d864;
+    border-width: 7px;
+    border-style: solid;
+    border-radius: 50%;
+}
+.text--warning {
+    border-color: #ffc021;
+    background-color: #ffc021;
+    border-width: 7px;
+    border-style: solid;
+    border-radius: 50%;
+}
+.text--error {
+    border-color: #ff623d;
+    background-color: #ff623d;
+    border-width: 7px;
+    border-style: solid; 
+    border-radius: 50%;
+}
+.icon {
+    font-size: 24px;
+    text-align: center;
+}
+.icon--sucess{
+    color:#47d864;
+}
+.icon--warning {
+    color: #ffc021;
+}
+.icon--error {
+    color: #ff623d;
+}
+.center-text {
+    width: 300px;
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+}
+.center {
+    text-align: center;
+}
