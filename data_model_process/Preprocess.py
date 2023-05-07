@@ -44,7 +44,7 @@ def step_5_join_text(Text):
 
 # Changing text data in to numbers. 
 def step_6_numerize(Text, path_to_tfidf):
-    tfidf = pickle.load(open("../" + path_to_tfidf, 'rb'))
+    tfidf = pickle.load(open(path_to_tfidf, 'rb')) # "../" + 
     return tfidf.transform(np.asarray([Text]))
 
 # Function for DataFrame Only
