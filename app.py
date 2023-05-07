@@ -5,6 +5,7 @@ from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from urllib.parse import quote
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
@@ -156,7 +157,94 @@ def register_account():
 
 @app.route("/home", methods=['GET','POST'])
 def home():
-    return render_template(session['role'] + '/home.html')
+    cur = mysql.connection.cursor()
+    
+    # info about num of group data
+    cur.execute("""
+                SELECT COUNT(*)
+                FROM data_group_info
+                """)
+    num_of_group_data = cur.fetchall()[0][0]
+    
+    # info about train data
+    cur.execute("""
+                SELECT COUNT(*)
+                FROM data_train
+                """)
+    count_train_data = cur.fetchall()[0][0]
+    
+    # info input data
+    cur.execute("""
+                SELECT COUNT(*)
+                FROM data_input
+                """)
+    count_data_input = cur.fetchall()[0][0]
+    
+    # info num of model 
+    cur.execute("""
+                SELECT COUNT(*)
+                FROM model_train_state
+                """)
+    count_num_model = cur.fetchall()[0][0]
+    
+    # info num of model active
+    cur.execute("""
+                SELECT COUNT(*)
+                FROM model_train_state
+                WHERE can_use = 1
+                """)
+    count_num_model_active = cur.fetchall()[0][0]
+    
+    # plot for data group count elm
+    cur.execute("""
+                SELECT dgi.group_name, COUNT(dgs.id_dtrain)
+                FROM data_group_info dgi
+                JOIN data_group_split dgs ON dgi.id_dgroup = dgs.id_dgroup
+                GROUP BY dgi.id_dgroup
+                ORDER BY COUNT(dgs.id_dtrain) DESC
+                LIMIT 5
+                """)
+    records = cur.fetchall()
+    columnName = ['group_name', 'count']
+    data_models = pd.DataFrame.from_records(records, columns=columnName)
+    fig_group_count = px.bar(data_models,
+                    y='group_name',
+                    x='count',
+                    color='group_name',
+                    text='count',
+                    title="Top 5 large group dataset")
+    fig_group_count.update_layout(xaxis_title="Count records",
+                                yaxis_title="Group name",
+                                legend_title="Group name")
+    graphJSON_group_count = json.dumps(fig_group_count, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    # num check spam in each day
+    cur.execute("""
+                SELECT DATE(di.create_at), COUNT(di.id) 
+                FROM data_input di 
+                GROUP BY DATE(di.create_at)
+                ORDER BY DATE(di.create_at) ASC
+                """)
+    records = cur.fetchall()
+    columnName = ['day', 'count']
+    data_days = pd.DataFrame.from_records(records, columns=columnName)
+    fig_day_input = px.area(data_days,
+                            x='day',
+                            y='count',
+                            title="Spam input to check in each day")
+    fig_day_input.update_layout(xaxis_title="Date",
+                                yaxis_title="Count sms")
+    graphJSON_day_input = json.dumps(fig_day_input, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    
+    return render_template(session['role'] + '/home.html',
+                           num_of_group_data = num_of_group_data,
+                           count_train_data = count_train_data,
+                           count_data_input = count_data_input,
+                           count_num_model = count_num_model,
+                           count_num_model_active = count_num_model_active,
+                           graphJSON_group_count = graphJSON_group_count,
+                           graphJSON_day_input = graphJSON_day_input)
 
 @app.route("/form_add_data_group_info", methods=['GET','POST'])
 def form_add_data_group_info():
@@ -717,9 +805,68 @@ def delete_one_model_train_state(id_train):
     cur.close()
     return redirect(url_for("view_model_train_state"))
 
-@app.route("/view_one_model_train_state/<string:id_train>_<string:mode>", methods=['GET','POST'])
-def view_one_model_train_state(id_train, mode):
-    return None
+@app.route("/view_one_model_train_state/<string:id_train>", methods=['GET','POST'])
+def view_one_model_train_state(id_train):
+    cur = mysql.connection.cursor()
+    
+    cur.execute("""
+                SELECT * 
+                FROM model_train_state
+                WHERE id_train = %s
+                """, (id_train, ))
+    state_info = cur.fetchall()
+    if len(state_info) == 0:
+        return "Error"
+    
+    # model info
+    cur.execute("""
+                SELECT * 
+                FROM model_info
+                WHERE id_model = (
+                    SELECT mt.id_model
+                    FROM model_train mt
+                    WHERE mt.id_train = %s
+                    LIMIT 1
+                )
+                """, (id_train, ))
+    model_info = cur.fetchall()[0]
+    
+    # select data to preprocessing
+    cur.execute("""
+                SELECT text, class_id
+                FROM data_train
+                WHERE id_dtrain IN (
+                    SELECT dgs.id_dtrain
+                    FROM data_group_split dgs
+                    WHERE dgs.id_dgroup = %s
+                )
+                ORDER BY create_at ASC
+                """, (state_info[0][1], ))
+    records = cur.fetchall()
+    columnName = ['Text', 'Target']
+    data_input = pd.DataFrame.from_records(records, columns=columnName)
+    
+    # test size
+    cur.execute("""
+                SELECT dgi.test_size, dgi.tfidf_path, dgi.group_name
+                FROM data_group_info dgi
+                WHERE dgi.id_dgroup = %s
+                """, (state_info[0][1], ))
+    test_size, path_to_tfidf, group_data_name = cur.fetchall()[0]
+    
+    tfidf = pickle.load(open(path_to_tfidf, 'rb'))
+    X = tfidf.transform(data_input['Text'].values)
+    
+    train_info, test_info = take_info_output(X, data_input['Target'].values,
+                                             state_info[0][2], test_size)
+    
+    return render_template(session['role'] + "/view_one_model_train_state.html",
+                           model_info = model_info,
+                           train_info = train_info,
+                           test_info = test_info,
+                           state_info = state_info,
+                           group_data_name = group_data_name,
+                           test_size = test_size)
 
 # @app.route("/view_data_group/<string:group_id>_<string:mode>", methods=['GET','POST'])
 # def view_data_group(group_id, mode):
@@ -902,6 +1049,16 @@ def is_spam_or_ham(id_train = ''):
         if len(text_input) == 0:
             return redirect(url_for("is_spam_or_ham", id_train = id_train))
         
+        cur.execute("""
+                    INSERT INTO data_input(id_user, original_text, create_by, update_by)
+                    VALUES (%s, %s, %s, %s)
+                    """, (session['username'][0], text_input,
+                          session['username'][1], session['username'][1]))
+        mysql.connection.commit()
+        
+        if "/" in text_input:
+            text_input = text_input.replace("/","")
+        
         return redirect(url_for("is_spam_or_ham_result", id_train = model_train_id, text = text_input))
     
     model_trains_list = []
@@ -919,6 +1076,7 @@ def is_spam_or_ham(id_train = ''):
     
 @app.route("/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
 def is_spam_or_ham_result(id_train, text):
+    text = quote(text)
     cur = mysql.connection.cursor()
     
     cur.execute("""
@@ -954,7 +1112,7 @@ def is_spam_or_ham_result(id_train, text):
     
     input_data = step_6_numerize(step_data[-1], tfidf_path)
     
-    y_pred = predict_model_sklearn(path_to_state, input_data)
+    y_pred = predict_model(path_to_state, input_data)
     
     if y_pred == 1:
         y_pred = "Spam"

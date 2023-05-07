@@ -1,0 +1,41 @@
+.dash-title {
+    color: black;
+    margin-bottom: 1rem;
+}
+.dash-cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-column-gap: 5rem;
+}
+.card-single {
+    background: rgb(70,130,180);
+    border-radius: 7px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+.card-body {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+}
+.card-body span {
+    font-size: 1.7rem;
+    color: #fff;
+    padding-right: 1rem;
+}
+.card-body h5 {
+    color: #fff;
+    font-size: 1rem;
+}
+.card-body h4 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-top: .2rem;
+}
+.card-footer {
+    padding: .2rem 1rem;
+    background: #f9fafc;
+}
+.card-footer a {
+    color:#777;
+}
+
