@@ -1,5 +1,5 @@
 import hashlib
-from flask import Flask, render_template, request, redirect, url_for, session, abort
+from flask import Flask, render_template, request, redirect, url_for, session, abort, flash
 from flask import Response, json, jsonify, send_file, render_template_string
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
@@ -20,6 +20,7 @@ import pdfkit
 import re
 import math
 import json
+from datetime import datetime
 
 # plot
 import plotly
@@ -114,6 +115,8 @@ def login():
 
 @app.route("/register_account", methods=['GET','POST'])
 def register_account():
+    cur = mysql.connection.cursor()
+
     if request.method == 'POST':
         details = request.form
         user_name = details['username'].strip()
@@ -122,13 +125,17 @@ def register_account():
         password = details['password'].strip()
         confirm_password = details['confirm_password'].strip()
 
+        cur.execute("SELECT username FROM user")
+        existing_usernames = [row[0] for row in cur.fetchall()]
+        if user_name in existing_usernames:
+            error = "Tên người dùng đã tồn tại trong hệ thống!"
+            return render_template('general/register_account.html', error=error)
+
         if password != confirm_password:
             error = "Mật khẩu xác nhận không khớp!"
             return render_template('general/register_account.html', error=error)
 
         hashed_password = hashlib.md5(password.lower().encode()).hexdigest()
-
-        cur = mysql.connection.cursor()
 
         cur.execute("INSERT INTO user (full_name, username, password) VALUES (%s, %s, %s)",
                     (full_name, user_name, hashed_password))
@@ -492,13 +499,223 @@ def view_one_group_info(id_dgroup):
                            num_rows = num_rows,
                            group_info = check_exist[0])
 
-@app.route("/view_model_info", methods=['GET','POST'])
+@app.route("/view_model_info")
 def view_model_info():
-    return None
+    cur = mysql.connection.cursor()
+    sql = """
+                    SELECT *
+                    FROM model_info 
+                """
+    cur.execute(sql)
+    model_info = cur.fetchall()
 
-@app.route("/view_model_train_state", methods=['GET','POST'])
+    return render_template(session['role'] + "/view_model_info.html", data=model_info)
+
+@app.route("/form_add_model_info", methods=['GET','POST'])
+def form_add_model_info():
+    cur = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        details = request.form
+        model_name = details['model_name'].strip()
+        model_class = details['model_class'].strip()
+        description = details['description'].strip()
+
+        cur.execute("INSERT INTO model_info (model_name, model_class, description) VALUES (%s, %s, %s)",
+                    (model_name, model_class, description))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Thêm mô hình thành công !!!")
+        return redirect(url_for('view_model_info'))
+
+    return render_template(session['role'] + "/form_add_model_info.html")
+
+
+@app.route("/update_one_model_info/<int:id_model>", methods=['GET','POST'])
+def update_one_model_info(id_model):
+    cur = mysql.connection.cursor()
+    sql = """
+                SELECT * 
+                from model_info
+                WHERE model_info.id_model = %s;
+              """
+    cur.execute(sql, (id_model,))
+    one_model_info = cur.fetchone()
+
+    if request.method == 'POST':
+        details = request.form
+        model_name = details['model_name'].strip()
+        model_class = details['model_class'].strip()
+        description = details['description'].strip()
+
+        cur.execute("UPDATE model_info SET model_name = %s, model_class = %s, description = %s WHERE id_model = %s",
+                    (model_name, model_class, description, id_model))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_model_info'))
+
+    return render_template(session['role'] + "/update_one_model_info.html", data=one_model_info)
+
+# chưa có thông báo xác nhận xóa không
+@app.route("/delete_one_model_info/<int:id_model>")
+def delete_one_model_info(id_model):
+    cur = mysql.connection.cursor()
+    sql = """
+            SELECT * 
+            from model_train
+            WHERE model_train.id_model = %s;
+          """
+    cur.execute(sql, (id_model,))
+    records = cur.fetchall()
+
+    if len(records) != 0:
+        flash("Không thể xóa model này!!")
+    else:
+        sql = """
+                DELETE FROM model_info
+                WHERE id_model = %s;
+              """
+        cur.execute(sql, (id_model,))
+        mysql.connection.commit()
+        flash("Đã xóa thành công model có ID: " + str(id_model))
+    cur.close()
+    return redirect(url_for("view_model_info"))
+
+@app.route("/view_model_train_state")
 def view_model_train_state():
-    return None
+    cur = mysql.connection.cursor()
+    sql = """
+                        SELECT *
+                        FROM model_train_state 
+                    """
+    cur.execute(sql)
+    model_train_state = cur.fetchall()
+
+    return render_template(session['role'] + "/view_model_train_state.html", data=model_train_state)
+
+##cần fix
+
+@app.route("/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
+def update_one_model_train_state(id_train):
+    cur = mysql.connection.cursor()
+    sql = """
+                    SELECT * 
+                    from model_train_state
+                    WHERE model_train_state.id_train = %s;
+                  """
+    cur.execute(sql, (id_train,))
+    one_model_train_state = cur.fetchone()
+
+    sql = """
+            SELECT *
+            FROM model_info
+        """
+    cur.execute(sql)
+    model_infos = cur.fetchall()
+    model_info_choice = []
+    for elm in model_infos:
+        tmp = " - ".join(list(elm[1:]))
+        model_info_choice.append(tmp)
+
+    sql = """
+            SELECT id_dgroup, group_name
+            FROM data_group_info
+        """
+    cur.execute(sql)
+    data_group = cur.fetchall()
+
+    if request.method == 'POST':
+        details = request.form
+        if 'FileModelUploadUpdate' not in request.files.keys():
+            return "Error 1"
+        else:
+            model_file = request.files['FileModelUploadUpdate']
+        time_train = details['time_train_update']
+        can_use = 1 if 'can_use_update' in details.keys() else 0
+
+        # file processing
+        if model_file.filename != '':
+            if model_file.filename.split(".")[-1] != 'pickle':
+                return "Error 2"
+            pathToFile = app.config['MODEL_FOLDER'] + "model_" + str(id_train) + ".pickle"
+            model_file.save(pathToFile)
+
+        # take id_dgroup
+        id_data_choice = details['info_data_update']
+        for elm in data_group:
+            if id_data_choice == elm[1]:
+                id_data_choice = elm[0]
+                break
+
+        # accuracy model
+        acc_model_train = details['acc_model_train_update']
+        acc_model_test = details['acc_model_test_update']
+
+        now = datetime.now()
+        update_at = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        sql_update = """
+                    UPDATE model_train_state SET id_dgroup = %s, path_to_state = %s, can_use = %s, time_train = %s,
+                     accuracy_model_train = %s, accuracy_model_test = %s, update_by = %s, update_at = %s
+                     WHERE id_train = %s
+                """
+
+        cur.execute(sql, (id_data_choice, pathToFile, can_use, time_train, acc_model_train, acc_model_test,
+                          session['username'][1], update_at, id_train))
+
+        mysql.connection.commit()
+
+        # model train table
+        model_info = details['model_info_update']
+        for i in range(len(model_info_choice)):
+            if model_info == model_info_choice[i]:
+                model_info = model_infos[i][0]
+
+        cur.execute("""
+                            UPDATE model_train SET id_model = %s
+                            WHERE id_train = %s
+                            """, (model_info, id_train))
+        mysql.connection.commit()
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_model_train_state'))
+
+    return render_template(session['role'] + "/update_one_model_train_state.html",
+                           current_data=one_model_train_state,
+                           model_infos=model_info_choice,
+                           data_group=data_group)
+
+# chưa có thông báo xác nhận xóa không
+@app.route("/delete_one_model_train_state/<int:id_train>")
+def delete_one_model_train_state(id_train):
+    cur = mysql.connection.cursor()
+
+    sql = """
+        SELECT * FROM `model_train_state` WHERE model_train_state.id_train = %s
+    """
+
+    cur.execute(sql, id_train)
+    path = cur.fetchone()
+    os.remove(path[2])
+
+    sql_train_state = """
+                DELETE FROM model_train_state
+                WHERE id_train = %s;
+              """
+    sql_train = """
+                    DELETE FROM model_train
+                    WHERE id_train = %s;
+                  """
+
+    cur.execute(sql_train, (id_train,))
+    cur.execute(sql_train_state, (id_train,))
+
+    mysql.connection.commit()
+    flash("Đã xóa thành công model train state có ID: " + str(id_train))
+    cur.close()
+    return redirect(url_for("view_model_train_state"))
 
 @app.route("/view_one_model_train_state/<string:id_train>_<string:mode>", methods=['GET','POST'])
 def view_one_model_train_state(id_train, mode):
@@ -542,6 +759,12 @@ def form_add_account():
         role_id = details['role'].strip()
         password = details['password'].strip()
         confirm_password = details['confirm_password'].strip()
+
+        cur.execute("SELECT username FROM user")
+        existing_usernames = [row[0] for row in cur.fetchall()]
+        if user_name in existing_usernames:
+            error = "Tên người dùng đã tồn tại trong hệ thống!"
+            return render_template(session['role'] + '/form_add_account.html', error=error, list_role=list_role)
 
         if password != confirm_password:
             error = "Mật khẩu xác nhận không khớp!"
