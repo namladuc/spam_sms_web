@@ -315,7 +315,6 @@ def form_add_model():
         else:
             model_file = request.files['FileModelUpload']
         time_train = details['time_train']
-        acc_model = details['acc_model']
         can_use = 1 if 'can_use' in details.keys() else 0
         
         # find id
@@ -695,7 +694,10 @@ def update_one_model_train_state(id_train):
                     WHERE model_train_state.id_train = %s;
                   """
     cur.execute(sql, (id_train,))
-    one_model_train_state = cur.fetchone()
+    one_model_train_state = cur.fetchall()
+    
+    if len(one_model_train_state) == 0:
+        return "Error"
 
     sql = """
             SELECT *
@@ -714,29 +716,22 @@ def update_one_model_train_state(id_train):
         """
     cur.execute(sql)
     data_group = cur.fetchall()
+    
+    data_group = [elm for elm in data_group]
+    for i in range(len(data_group)):
+        if data_group[i][0] == one_model_train_state[0][1]:
+            temp = data_group[0]
+            data_group[0] = data_group[i]
+            data_group[i] = temp
+            break
 
     if request.method == 'POST':
         details = request.form
-        if 'FileModelUploadUpdate' not in request.files.keys():
-            return "Error 1"
-        else:
-            model_file = request.files['FileModelUploadUpdate']
         time_train = details['time_train_update']
         can_use = 1 if 'can_use_update' in details.keys() else 0
 
-        # file processing
-        if model_file.filename != '':
-            if model_file.filename.split(".")[-1] != 'pickle':
-                return "Error 2"
-            pathToFile = app.config['MODEL_FOLDER'] + "model_" + str(id_train) + ".pickle"
-            model_file.save(pathToFile)
-
         # take id_dgroup
         id_data_choice = details['info_data_update']
-        for elm in data_group:
-            if id_data_choice == elm[1]:
-                id_data_choice = elm[0]
-                break
 
         # accuracy model
         acc_model_train = details['acc_model_train_update']
@@ -746,12 +741,12 @@ def update_one_model_train_state(id_train):
         update_at = now.strftime("%Y-%m-%d %H:%M:%S")
 
         sql_update = """
-                    UPDATE model_train_state SET id_dgroup = %s, path_to_state = %s, can_use = %s, time_train = %s,
+                    UPDATE model_train_state SET id_dgroup = %s, can_use = %s, time_train = %s,
                      accuracy_model_train = %s, accuracy_model_test = %s, update_by = %s, update_at = %s
                      WHERE id_train = %s
                 """
 
-        cur.execute(sql, (id_data_choice, pathToFile, can_use, time_train, acc_model_train, acc_model_test,
+        cur.execute(sql_update, (id_data_choice, can_use, time_train, acc_model_train, acc_model_test,
                           session['username'][1], update_at, id_train))
 
         mysql.connection.commit()
@@ -763,15 +758,15 @@ def update_one_model_train_state(id_train):
                 model_info = model_infos[i][0]
 
         cur.execute("""
-                            UPDATE model_train SET id_model = %s
-                            WHERE id_train = %s
-                            """, (model_info, id_train))
+                    UPDATE model_train SET id_model = %s
+                    WHERE id_train = %s
+                    """, (model_info, id_train))
         mysql.connection.commit()
         flash("Chỉnh sửa thành công !!!")
         return redirect(url_for('view_model_train_state'))
 
     return render_template(session['role'] + "/update_one_model_train_state.html",
-                           current_data=one_model_train_state,
+                           current_data=one_model_train_state[0],
                            model_infos=model_info_choice,
                            data_group=data_group)
 
@@ -784,8 +779,14 @@ def delete_one_model_train_state(id_train):
         SELECT * FROM `model_train_state` WHERE model_train_state.id_train = %s
     """
 
-    cur.execute(sql, id_train)
-    path = cur.fetchone()
+    cur.execute(sql, (id_train, ))
+    path = cur.fetchall()
+    
+    if len(path) == 0:
+        return "Error"
+    
+    path = path[0]
+    
     os.remove(path[2])
 
     sql_train_state = """
