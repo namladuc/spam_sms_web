@@ -1,0 +1,28 @@
+<form method="post" action="/form_add_model_info" enctype ="multipart/form-data">
+    <span >
+        <b>Sửa thông tin mô hình</b>
+    </span>
+        <div>
+            <label class="control-label">Tên mô hình: </label>
+            <input type="text" title="model_name" name="model_name"
+                id="model_name">
+        </div>
+
+        <div>
+            <label>Loại mô hình: </label>
+            <select id="model_class" name="model_class">
+                <option value="Sklearn">Sklearn</option>
+                <option value="Numpy">Numpy</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Mô tả mô hình: </label>
+            <input type="text" title="description" name="description"
+                id="description">
+        </div>
+
+        <div>
+            <input type="submit" value="Lưu" id="submit">
+        </div>
+</form>
