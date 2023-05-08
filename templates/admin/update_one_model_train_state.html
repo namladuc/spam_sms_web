@@ -20,17 +20,12 @@
             </select>
         </div>
 
-        <div>
-            <label class="control-label">Upload model file</label>
-            <input type="file" style="height:45px;" id="FileModelUploadUpdate" name="FileModelUploadUpdate" class="form-control" value="{{ current_data[2] }}"/>
-        </div>
-
         <div >
             <label>Thông tin dữ liệu</label>
             <select id="info_data_update" name="info_data_update">
               {% for data in data_group %}
 
-              <option> {{data[1]}} </option>
+              <option value="{{data[0]}}"> {{data[1]}} </option>
 
               {% endfor %}
             </select>
@@ -56,7 +51,11 @@
 
         <div>
             <label class="control-label">Có thể sử dụng</label>
-            <input type="checkbox" name="can_use_update" id="can_use_update">
+            {% if current_data[3] == 1 %}
+            <input type="checkbox" name="can_use_update" id="can_use_update" checked>
+            {% else %}
+            <input type="checkbox" name="can_use_update" id="can_use_update" >
+            {% endif %}
         </div>
 
         <!--=====ĐĂNG NHẬP======-->
