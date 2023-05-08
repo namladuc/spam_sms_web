@@ -1,0 +1,33 @@
+<form method="post" action="/update_one_model_info/{{ data[0] }}" enctype ="multipart/form-data">
+    <span >
+        <b>Sửa thông tin mô hình</b>
+    </span>
+        <div>
+            <label class="control-label">Tên mô hình: </label>
+            <input type="text" title="model_name" name="model_name"
+                id="model_name" value="{{ data[1] }}">
+        </div>
+
+        <div>
+            <label>Loại mô hình: </label>
+            <select id="model_class" name="model_class">
+              {% if data[2] == 'Sklearn' %}
+                <option value="Sklearn" selected>Sklearn</option>
+                <option value="Numpy">Numpy</option>
+              {% else %}
+                <option value="Sklearn">Sklearn</option>
+                <option value="Numpy" selected>Numpy</option>
+              {% endif %}
+            </select>
+        </div>
+
+        <div>
+            <label>Mô tả mô hình: </label>
+            <input type="text" title="description" name="description"
+                id="description" value="{{ data[3] }}">
+        </div>
+
+        <div>
+            <input type="submit" value="Lưu" id="submit">
+        </div>
+</form>

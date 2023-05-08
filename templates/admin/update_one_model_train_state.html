@@ -1,0 +1,66 @@
+<form method="post" action="/update_one_model_train_state/{{ current_data[0] }}" enctype ="multipart/form-data">
+    <span >
+        <b>Sửa mô hình</b>
+    </span>
+        <div>
+            {% if err_code %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <strong>{{ err_code }}</strong>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label>Thông tin mô hình</label>
+            <select id="model_info_update" name="model_info_update">
+              {% for data in model_infos %}
+              <option> {{data}} </option>
+              {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Upload model file</label>
+            <input type="file" style="height:45px;" id="FileModelUploadUpdate" name="FileModelUploadUpdate" class="form-control" value="{{ current_data[2] }}"/>
+        </div>
+
+        <div >
+            <label>Thông tin dữ liệu</label>
+            <select id="info_data_update" name="info_data_update">
+              {% for data in data_group %}
+
+              <option> {{data[1]}} </option>
+
+              {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Thời gian huấn luyện</label>
+            <input type="text" title="Thời gian huấn luyện" name="time_train_update"
+                id="time_train_update" value="{{ current_data[4] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
+        </div>
+
+        <div>
+            <label class="control-label">Accuracy của mô hình trên tập train: </label>
+            <input type="text" title="ACC train" name="acc_model_train_update"
+                id="acc_model_train_update" value="{{ current_data[5] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
+        </div>
+
+        <div>
+            <label class="control-label">Accuracy của mô hình trên tập test: </label>
+            <input type="text" title="ACC test" name="acc_model_test_update"
+                id="acc_model_test_update" value="{{ current_data[6] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
+        </div>
+
+        <div>
+            <label class="control-label">Có thể sử dụng</label>
+            <input type="checkbox" name="can_use_update" id="can_use_update">
+        </div>
+
+        <!--=====ĐĂNG NHẬP======-->
+        <div>
+            <input type="submit" value="Lưu" id="submit" />
+        </div>
+</form>
