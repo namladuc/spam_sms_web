@@ -1,0 +1,32 @@
+<form method="post" action="/form_add_data_input_to_data_train/{{id_data_input}}" enctype ="multipart/form-data">
+    <span >
+        <b>Chuyển dữ liệu sang dữ liệu huấn luyện</b>
+    </span>
+
+        <div>
+            <label class="control-label">Dữ liệu: </label>
+            <textarea title="text_original" name="text_original"
+                id="text_original">{{data}}</textarea>
+        </div>
+
+        <div>
+            <label>Loại nhãn: </label>
+            <select id="class_id" name="class_id">
+                <option value="1">Spam</option>
+                <option value="0">Ham</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Chọn nhóm cho dữ liệu: </label>
+            <br>
+            {% for elm in data_group_info %}
+            <input type="checkbox" name="{{elm[1]}}" value="{{elm[1]}}" id="{{elm[1]}}">{{elm[1]}}</input><br>
+            {% endfor %}
+        </div>
+
+
+        <div>
+            <input type="submit" value="Lưu" id="submit">
+        </div>
+</form>
