@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> {%block title%} {% endblock %} </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='doc/css/main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <!-- or -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+</head>
+
+<body onload="time()" class="app sidebar-mini rtl">
+    <!-- Navbar-->
+    <header class="app-header">
+        <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar"
+            aria-label="Hide Sidebar"></a>
+        <!-- Navbar Right Menu-->
+        <ul class="app-nav">
+
+
+            <!-- User Menu-->
+            <li><a class="app-nav__item" href="/logout"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+
+            </li>
+        </ul>
+    </header>
+    <!-- Sidebar menu-->
+    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+    <aside class="app-sidebar">
+        <hr>
+        <ul class="app-menu">
+            <li><a class="app-menu__item haha" href="/home"><i class='app-menu__icon bx bx-user'></i>
+                    <span class="app-menu__label">Trang chủ</span></a></li>
+            <li><a class="app-menu__item" href="/view_mo_hinh"><i class='app-menu__icon bx bx-cube'></i><span
+                        class="app-menu__label">Mô hình</span></a></li>
+            <li><a class="app-menu__item" href="/du_leu"><i class='app-menu__icon bx bxs-data'></i><span
+                        class="app-menu__label">Dữ liệu</span></a></li>
+            <li><a class="app-menu__item" href="/cai_dat"><i class='app-menu__icon bx bx-cog'></i><span
+                        class="app-menu__label">Cài đặt</span></a></li>
+        </ul>
+    </aside>
+    {% block content %}{% endblock content %}
+    <script src="{{url_for('static', filename='js/displaytime/displaytime.js')}}"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='js/active/active.js')}}"></script>
+</body>
+
+</html>

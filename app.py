@@ -1016,9 +1016,67 @@ def form_add_data_train():
         return redirect(url_for('form_add_data_train'))
     return render_template(session['role'] + "/form_add_data_train.html")
 
-@app.route("/change_to_data_train/<string:id_data_input>", methods=['GET','POST'])
+@app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def change_to_data_train(id_data_input):
-    return None
+    cur = mysql.connection.cursor()
+    
+    cur.execute("""
+                SELECT original_text
+                FROM data_input
+                WHERE id = %s
+                """, (id_data_input, ))
+    data = cur.fetchall()
+    if len(data) == 0:
+        return "Error"
+    data = data[0][0]
+    
+    cur.execute("""SELECT *
+                    FROM data_group_info
+                """)
+    data_group_info = cur.fetchall()
+    
+    if request.method == 'POST':
+        detail = request.form
+        data_clean = step_corpus_for_one_text(detail['text_original'].strip())
+        class_id = detail['class_id']
+        
+        cur.execute("SELECT * FROM data_train WHERE text = %s", (data_clean, ))
+        check = cur.fetchall()
+        if (len(check) != 0):
+            return "Error"
+        
+        lst_group= list(detail.keys())
+        lst_group.remove('text_original')
+        
+        # template sql 
+        sql_data_train_template = "INSERT INTO data_train(text, class_id, create_by, update_by) VALUES (%s, %s, %s, %s)"
+        sql_select_data_train_id = "SELECT id_dtrain FROM data_train WHERE text = %s"
+
+        cur.execute(sql_select_data_train_id, (data_clean, ))
+        data_id = cur.fetchall()
+        if len(data_id) == 0:
+            cur.execute(sql_data_train_template, (data_clean, class_id,
+                                                    session['username'][1],
+                                                    session['username'][1]))
+            mysql.connection.commit()
+            cur.execute(sql_select_data_train_id, (data_clean, ))
+            data_id = cur.fetchall()
+        data_id = data_id[0][0]
+        
+        for elm in data_group_info:
+            if elm[1] in lst_group:
+                cur.execute("""
+                            INSERT INTO data_group_split(id_dtrain, id_dgroup)
+                            VALUES (%s, %s)
+                            """, (data_id, elm[0]))
+                mysql.connection.commit()
+        
+        return redirect(url_for('home'))
+    
+    return render_template(session['role'] + "/form_add_data_input_to_data_train.html",
+                           id_data_input = id_data_input,
+                           data = data,
+                           data_group_info = data_group_info)
 
 # ---- ADMIN ONLY ----
 

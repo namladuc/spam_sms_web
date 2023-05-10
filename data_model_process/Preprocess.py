@@ -47,6 +47,14 @@ def step_6_numerize(Text, path_to_tfidf):
     tfidf = pickle.load(open(path_to_tfidf, 'rb')) # "../" + 
     return tfidf.transform(np.asarray([Text]))
 
+# Full step for one text
+def step_corpus_for_one_text(Text):
+    tmp = step_1_clean(Text)
+    tmp = step_2_tokenize(tmp)
+    tmp = step_3_remove_stopwords(tmp)
+    tmp = step_4_lemmatizer(tmp)
+    return step_5_join_text(tmp)
+
 # Function for DataFrame Only
 def step_all_for_data_frame(data, path_to_tfidf):
     # step 1
