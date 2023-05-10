@@ -39,12 +39,14 @@
                     <div class="wrap-input100 validate-input">
                       <div>
                         {% if error %}
-                        <div id="error-message">
+                        <div class="alert alert-danger" style="text-align: left; font-size: 15px;" id="error-message">
+                          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                           {{ error }}
                         </div>
                       {% endif %}
                       {% if message %}
-                        <div id="success-message">
+                        <div class="alert alert-danger" style="text-align: left; font-size: 15px;" id="success-message">
+                          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                           {{ message }}
                         </div>
                       {% endif %}
