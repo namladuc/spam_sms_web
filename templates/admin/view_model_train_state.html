@@ -1,0 +1,68 @@
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash">
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+
+<table>
+  <thead>
+    <tr>
+      <th>ID train</th>
+      <th>ID data group</th>
+      <th>Trạng thái</th>
+      <th>Thời gian training</th>
+      <th>Accuracy model train</th>
+      <th>Accuracy model test</th>
+      <th>Create at</th>
+      <th>Create by</th>
+      <th>Update at</th>
+      <th>Update by</th>
+      <th>Chức năng</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>{{ row[4] }}</td>
+      <td>{{ row[5] }}</td>
+      <td>{{ row[6] }}</td>
+      <td>{{ row[7] }}</td>
+      <td>{{ row[8] }}</td>
+      <td>{{ row[9] }}</td>
+      <td>{{ row[10] }}</td>
+      <td>
+        <button onclick="editModel_state('{{ row[0] }}')">Sửa</button>
+        <button onclick="deleteModel_state('{{ row[0] }}')">Xóa</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br>
+
+<a href="/form_add_model">Thêm mô hình đã được huấn luyện </a>
+
+<script>
+  function editModel_state(id_train) {
+    window.location.href = `/update_one_model_train_state/${id_train}`;
+  }
+
+  function deleteModel_state(id_train) {
+    window.location.href = `/delete_one_model_train_state/${id_train}`;
+  }
+
+  setTimeout(function() {
+    document.querySelector('.flash').style.display = 'none';
+  }, 3000);
+</script>
+

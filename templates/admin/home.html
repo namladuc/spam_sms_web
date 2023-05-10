@@ -1,5 +1,31 @@
-{% extends "base.html" %}
-{% block title %} Trang chủ {% endblock title %}
-{% block content %}
-<p> Duong Nam </p>
-{% endblock content %}
+Num of group data: {{num_of_group_data}}
+<br>
+Count train data records: {{count_train_data}}
+<br>
+Count data input records: {{count_data_input}}
+<br>
+Count model in DB: {{count_num_model}}
+<br>
+Count model active: {{count_num_model_active}}
+<br>
+
+<br>
+
+<div id='graphs_group_count' class='graphs_group_count'
+ style="height: 100%; width: 100%; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<br>
+
+<div id='graphs_day_input' class='graphs_day_input'
+ style="height: 100%; width: 100%; border: 1px solid; 
+box-shadow: 5px 5px 5px #888888;"></div>
+
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+<script type='text/javascript'>
+    var graphs_group_count = {{graphJSON_group_count | safe}};
+    Plotly.plot('graphs_group_count',graphs_group_count,{});
+    var graphs_day_input = {{graphJSON_day_input | safe}};
+    Plotly.plot('graphs_day_input',graphs_day_input,{});
+  </script></html>
