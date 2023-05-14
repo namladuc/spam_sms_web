@@ -1,3 +1,13 @@
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash">
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <table>
   <thead>
     <tr>
@@ -5,6 +15,7 @@
       <th>Full name</th>
       <th>username</th>
       <th>Role</th>
+      <th>Chức năng</th>
     </tr>
   </thead>
   <tbody>
@@ -13,8 +24,28 @@
       <td>{{ row[0] }}</td>
       <td>{{ row[1] }}</td>
       <td>{{ row[2] }}</td>
-      <td>{{ row[8] }}</td>
+      <td>{{ row[7] }}</td>
+      <td>
+        <button onclick="editAccount('{{ row[0] }}')">Sửa</button>
+        <button onclick="deleteAccount('{{ row[0] }}')">Xóa</button>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<a href="/form_add_account">Thêm tài khoản</a>
+
+<script>
+  function editAccount(id_user) {
+    window.location.href = `/update_one_account/${id_user}`;
+  }
+
+  function deleteAccount(id_user) {
+    window.location.href = `/delete_one_account/${id_user}`;
+  }
+
+  setTimeout(function() {
+    document.querySelector('.flash').style.display = 'none';
+  }, 3000);
+</script>

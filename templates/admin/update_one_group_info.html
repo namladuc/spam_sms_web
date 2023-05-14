@@ -1,0 +1,20 @@
+<form method="post" action="/update_one_group_info/{{ data[0] }}" enctype ="multipart/form-data">
+    <span >
+        <b>Sửa thông tin nhóm dữ liệu:</b>
+    </span>
+        <div>
+            <label class="control-label">Tên nhóm: </label>
+            <input type="text" title="group_name" name="group_name"
+                id="group_name" value="{{ data[1] }}">
+        </div>
+
+        <div>
+            <label>Kích thước tập test: </label>
+            <input type="text" title="test_size" name="test_size"
+                id="test_size" value="{{ data[3] }}">
+        </div>
+
+        <div>
+            <input type="submit" value="Lưu" id="submit">
+        </div>
+</form>
