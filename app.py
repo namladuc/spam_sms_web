@@ -406,6 +406,60 @@ def view_data_group_info():
 
     return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos)
 
+@app.route("/update_one_group_info/<int:id_dgroup>", methods=['GET','POST'])
+def update_one_group_info(id_dgroup):
+    cur = mysql.connection.cursor()
+    sql = """
+                SELECT * 
+                from data_group_info
+                WHERE data_group_info.id_dgroup = %s;
+              """
+    cur.execute(sql, (id_dgroup,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    record = records[0]
+
+    if request.method == 'POST':
+        details = request.form
+        group_name = details['group_name'].strip()
+        test_size = details['test_size'].strip()
+
+        cur.execute("UPDATE data_group_info SET group_name = %s, test_size = %s WHERE id_dgroup = %s",
+                    (group_name, test_size, id_dgroup))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_data_group_info'))
+    return render_template(session['role'] + "/update_one_group_info.html", data=record)
+
+@app.route("/delete_one_group_info/<int:id_dgroup>")
+def delete_one_group_info(id_dgroup):
+    cur = mysql.connection.cursor()
+    sql = """
+            SELECT * 
+            from data_group_split
+            WHERE data_group_split.id_dgroup = %s;
+          """
+    cur.execute(sql, (id_dgroup,))
+    records = cur.fetchall()
+
+    if len(records) != 0:
+        flash("Không thể xóa model này!!")
+    else:
+        sql = """
+                DELETE FROM data_group_info
+                WHERE id_dgroup = %s;
+              """
+        cur.execute(sql, (id_dgroup,))
+        mysql.connection.commit()
+        flash("Đã xóa thành công nhóm dữ liệu có ID: " + str(id_dgroup))
+    cur.close()
+    return redirect(url_for("view_data_group_info"))
+
 @app.route("/view_one_group_info/<string:id_dgroup>", methods=['GET','POST'])
 def view_one_group_info(id_dgroup):
     # pie chart: %ham, %spam
@@ -935,6 +989,78 @@ def form_add_account():
         return render_template(session['role'] + '/form_add_account.html', message=message,  list_role=list_role)
 
     return render_template(session['role'] + '/form_add_account.html', list_role=list_role)
+
+@app.route("/update_one_account/<int:id_user>", methods=['GET','POST'])
+def update_one_account(id_user):
+    cur = mysql.connection.cursor()
+    sql = """
+                    SELECT * FROM user
+                    join role_user on user.id = role_user.id_user
+                    join role on role.role_id = role_user.id_role
+                    WHERE user.id = %s
+              """
+    cur.execute(sql, (id_user,))
+    one_account = cur.fetchall()
+
+    if len(one_account) == 0:
+        return "Error"
+
+    if request.method == 'POST':
+        details = request.form
+        full_name = details['full_name'].strip()
+        role = details['role'].strip()
+
+        cur.execute("SELECT * FROM role WHERE role_name = %s",
+                    (role, ))
+        role_id = cur.fetchone()[0]
+
+        cur.execute("UPDATE user SET full_name = %s WHERE id = %s",
+                    (full_name, id_user))
+
+        cur.execute("UPDATE role_user SET id_role = %s WHERE id_user = %s",
+                    (role_id, id_user))
+
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_account'))
+
+    return render_template(session['role'] + "/update_one_account.html", data=one_account[0])
+
+
+@app.route("/delete_one_account/<int:id_user>")
+def delete_one_account(id_user):
+    cur = mysql.connection.cursor()
+
+    sql = """
+        SELECT * FROM user WHERE user.id = %s
+    """
+
+    cur.execute(sql, (id_user,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    record = records[0]
+
+    sql_delete_user_role = """
+                   DELETE FROM role_user
+                   WHERE id_user = %s;
+                 """
+    sql_delete_user = """
+                       DELETE FROM user
+                       WHERE id = %s;
+                     """
+
+    cur.execute(sql_delete_user_role, (id_user,))
+    cur.execute(sql_delete_user, (id_user,))
+
+    mysql.connection.commit()
+    flash("Đã xóa thành công tài khoản có ID: " + str(id_user))
+    cur.close()
+    return redirect(url_for("view_account"))
 
 
 @app.route("/form_add_data_train", methods=['GET','POST'])
