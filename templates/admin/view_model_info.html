@@ -16,7 +16,7 @@
 
           <div class="row element-button">
             <div class="col-sm-2">
-              <a class="btn btn-add btn-sm" href="/view_model_info/form_add_model" title="Thêm mô hình"><i
+              <a class="btn btn-add btn-sm" href="/view_model_info/form_add_model_info" title="Thêm mô hình"><i
                   class="fas fa-plus"></i>
                 Thêm mô hình</a>
             </div>
@@ -147,11 +147,11 @@
 
   function deleteMoreRow(r) {
     var numRow = document.getElementById("sampleTable").rows.length;
-    var id_nv = [];
+    var id_model = [];
     $('#sampleTable tbody :checkbox').each(function () {
         let i = this.parentNode.parentNode.rowIndex;
         if (this.checked) {
-          id_nv.push(this.parentNode.parentNode.childNodes[3].textContent);
+          id_model.push(this.parentNode.parentNode.childNodes[3].textContent);
         }
     });
 
@@ -162,9 +162,9 @@
     })
       .then((willDelete) => {
         if (willDelete) {
-          for (let i = 0; i < id_nv.length; i++) {
+          for (let i = 0; i < id_model.length; i++) {
             $.ajax({
-              url:"/delete_lop/" + id_nv[i],
+              url:"/delete_one_model_info/" + id_model[i],
               context: document.body
             })
           }
