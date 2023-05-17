@@ -13606,7 +13606,8 @@ be a descendant of the grid when it is being dragged.
   display: -ms-flexbox;
   display: flex;
   /* background-color: rgb(0, 28, 64); */
-  background-color: rgb(70,130,180);
+  /* background-color: rgb(70,130,180); */
+  background-color: rgb(46, 48, 48);
   z-index: 1;
   padding-right: 15px;
   padding-left: 15px;
@@ -13718,7 +13719,7 @@ be a descendant of the grid when it is being dragged.
   padding: 15px;
   line-height: 0px;
   color: rgb(0, 28, 64);
-  background: #c6defd;
+  background: rgb(142, 145, 145);
   -webkit-transition: background-color 0.3s ease;
   -o-transition: background-color 0.3s ease;
   transition: background-color 0.3s ease;
@@ -13858,7 +13859,8 @@ be a descendant of the grid when it is being dragged.
   overflow: auto;
   z-index: 10;
   /* background: rgb(0, 28, 64); */
-  background: rgb(70,130,180);
+  /* background: rgb(70,130,180); */
+  background: rgb(46, 48, 48);
   /* box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); */
   /* border-bottom-right-radius: 50px; */
 }
@@ -15377,7 +15379,7 @@ be a descendant of the grid when it is being dragged.
 }
 .haha{
     color: rgb(0, 28, 64) !important;
-    background: #c6defd !important;
+    background: rgb(142, 145, 145) !important;
     font-weight: 600;
     box-shadow: none !important;
     border: 1px solid;
