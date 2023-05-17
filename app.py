@@ -652,7 +652,7 @@ def view_model_info():
 
     return render_template(session['role'] + "/view_model_info.html", data=model_info)
 
-@app.route("/form_add_model_info", methods=['GET','POST'])
+@app.route("/view_model_info/form_add_model_info", methods=['GET','POST'])
 def form_add_model_info():
     cur = mysql.connection.cursor()
 
