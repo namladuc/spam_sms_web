@@ -42,6 +42,7 @@
       <td>
         <button onclick="editModel_state('{{ row[0] }}')">Sửa</button>
         <button onclick="deleteModel_state('{{ row[0] }}')">Xóa</button>
+        <button onclick="viewModel_state('{{ row[0] }}')">Xem</button>
       </td>
     </tr>
     {% endfor %}
@@ -59,6 +60,10 @@
 
   function deleteModel_state(id_train) {
     window.location.href = `/delete_one_model_train_state/${id_train}`;
+  }
+
+  function viewModel_state(id_train) {
+    window.location.href = `/view_one_model_train_state/${id_train}`;
   }
 
   setTimeout(function() {

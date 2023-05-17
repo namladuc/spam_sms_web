@@ -406,6 +406,60 @@ def view_data_group_info():
 
     return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos)
 
+@app.route("/update_one_group_info/<int:id_dgroup>", methods=['GET','POST'])
+def update_one_group_info(id_dgroup):
+    cur = mysql.connection.cursor()
+    sql = """
+                SELECT * 
+                from data_group_info
+                WHERE data_group_info.id_dgroup = %s;
+              """
+    cur.execute(sql, (id_dgroup,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    record = records[0]
+
+    if request.method == 'POST':
+        details = request.form
+        group_name = details['group_name'].strip()
+        test_size = details['test_size'].strip()
+
+        cur.execute("UPDATE data_group_info SET group_name = %s, test_size = %s WHERE id_dgroup = %s",
+                    (group_name, test_size, id_dgroup))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_data_group_info'))
+    return render_template(session['role'] + "/update_one_group_info.html", data=record)
+
+@app.route("/delete_one_group_info/<int:id_dgroup>")
+def delete_one_group_info(id_dgroup):
+    cur = mysql.connection.cursor()
+    sql = """
+            SELECT * 
+            from data_group_split
+            WHERE data_group_split.id_dgroup = %s;
+          """
+    cur.execute(sql, (id_dgroup,))
+    records = cur.fetchall()
+
+    if len(records) != 0:
+        flash("Không thể xóa model này!!")
+    else:
+        sql = """
+                DELETE FROM data_group_info
+                WHERE id_dgroup = %s;
+              """
+        cur.execute(sql, (id_dgroup,))
+        mysql.connection.commit()
+        flash("Đã xóa thành công nhóm dữ liệu có ID: " + str(id_dgroup))
+    cur.close()
+    return redirect(url_for("view_data_group_info"))
+
 @app.route("/view_one_group_info/<string:id_dgroup>", methods=['GET','POST'])
 def view_one_group_info(id_dgroup):
     # pie chart: %ham, %spam
@@ -936,6 +990,78 @@ def form_add_account():
 
     return render_template(session['role'] + '/form_add_account.html', list_role=list_role)
 
+@app.route("/update_one_account/<int:id_user>", methods=['GET','POST'])
+def update_one_account(id_user):
+    cur = mysql.connection.cursor()
+    sql = """
+                    SELECT * FROM user
+                    join role_user on user.id = role_user.id_user
+                    join role on role.role_id = role_user.id_role
+                    WHERE user.id = %s
+              """
+    cur.execute(sql, (id_user,))
+    one_account = cur.fetchall()
+
+    if len(one_account) == 0:
+        return "Error"
+
+    if request.method == 'POST':
+        details = request.form
+        full_name = details['full_name'].strip()
+        role = details['role'].strip()
+
+        cur.execute("SELECT * FROM role WHERE role_name = %s",
+                    (role, ))
+        role_id = cur.fetchone()[0]
+
+        cur.execute("UPDATE user SET full_name = %s WHERE id = %s",
+                    (full_name, id_user))
+
+        cur.execute("UPDATE role_user SET id_role = %s WHERE id_user = %s",
+                    (role_id, id_user))
+
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_account'))
+
+    return render_template(session['role'] + "/update_one_account.html", data=one_account[0])
+
+
+@app.route("/delete_one_account/<int:id_user>")
+def delete_one_account(id_user):
+    cur = mysql.connection.cursor()
+
+    sql = """
+        SELECT * FROM user WHERE user.id = %s
+    """
+
+    cur.execute(sql, (id_user,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    record = records[0]
+
+    sql_delete_user_role = """
+                   DELETE FROM role_user
+                   WHERE id_user = %s;
+                 """
+    sql_delete_user = """
+                       DELETE FROM user
+                       WHERE id = %s;
+                     """
+
+    cur.execute(sql_delete_user_role, (id_user,))
+    cur.execute(sql_delete_user, (id_user,))
+
+    mysql.connection.commit()
+    flash("Đã xóa thành công tài khoản có ID: " + str(id_user))
+    cur.close()
+    return redirect(url_for("view_account"))
+
 
 @app.route("/form_add_data_train", methods=['GET','POST'])
 def form_add_data_train():
@@ -1016,9 +1142,67 @@ def form_add_data_train():
         return redirect(url_for('form_add_data_train'))
     return render_template(session['role'] + "/form_add_data_train.html")
 
-@app.route("/change_to_data_train/<string:id_data_input>", methods=['GET','POST'])
+@app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def change_to_data_train(id_data_input):
-    return None
+    cur = mysql.connection.cursor()
+    
+    cur.execute("""
+                SELECT original_text
+                FROM data_input
+                WHERE id = %s
+                """, (id_data_input, ))
+    data = cur.fetchall()
+    if len(data) == 0:
+        return "Error"
+    data = data[0][0]
+    
+    cur.execute("""SELECT *
+                    FROM data_group_info
+                """)
+    data_group_info = cur.fetchall()
+    
+    if request.method == 'POST':
+        detail = request.form
+        data_clean = step_corpus_for_one_text(detail['text_original'].strip())
+        class_id = detail['class_id']
+        
+        cur.execute("SELECT * FROM data_train WHERE text = %s", (data_clean, ))
+        check = cur.fetchall()
+        if (len(check) != 0):
+            return "Error"
+        
+        lst_group= list(detail.keys())
+        lst_group.remove('text_original')
+        
+        # template sql 
+        sql_data_train_template = "INSERT INTO data_train(text, class_id, create_by, update_by) VALUES (%s, %s, %s, %s)"
+        sql_select_data_train_id = "SELECT id_dtrain FROM data_train WHERE text = %s"
+
+        cur.execute(sql_select_data_train_id, (data_clean, ))
+        data_id = cur.fetchall()
+        if len(data_id) == 0:
+            cur.execute(sql_data_train_template, (data_clean, class_id,
+                                                    session['username'][1],
+                                                    session['username'][1]))
+            mysql.connection.commit()
+            cur.execute(sql_select_data_train_id, (data_clean, ))
+            data_id = cur.fetchall()
+        data_id = data_id[0][0]
+        
+        for elm in data_group_info:
+            if elm[1] in lst_group:
+                cur.execute("""
+                            INSERT INTO data_group_split(id_dtrain, id_dgroup)
+                            VALUES (%s, %s)
+                            """, (data_id, elm[0]))
+                mysql.connection.commit()
+        
+        return redirect(url_for('home'))
+    
+    return render_template(session['role'] + "/form_add_data_input_to_data_train.html",
+                           id_data_input = id_data_input,
+                           data = data,
+                           data_group_info = data_group_info)
 
 # ---- ADMIN ONLY ----
 
