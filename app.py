@@ -286,7 +286,7 @@ def form_add_data_group_info():
         mysql.connection.commit()
     return render_template(session['role'] + "/form_add_data_group_info.html")
 
-@app.route("/form_add_model", methods=['GET','POST'])
+@app.route("/view_model_info/view_model_train_state/form_add_model", methods=['GET','POST'])
 def form_add_model():
     cur = mysql.connection.cursor()
     
@@ -652,7 +652,7 @@ def view_model_info():
 
     return render_template(session['role'] + "/view_model_info.html", data=model_info)
 
-@app.route("/form_add_model_info", methods=['GET','POST'])
+@app.route("/view_model_info/form_add_model_info", methods=['GET','POST'])
 def form_add_model_info():
     cur = mysql.connection.cursor()
 
@@ -673,7 +673,7 @@ def form_add_model_info():
     return render_template(session['role'] + "/form_add_model_info.html")
 
 
-@app.route("/update_one_model_info/<int:id_model>", methods=['GET','POST'])
+@app.route("/view_model_info/update_one_model_info/<int:id_model>", methods=['GET','POST'])
 def update_one_model_info(id_model):
     cur = mysql.connection.cursor()
     sql = """
@@ -725,7 +725,7 @@ def delete_one_model_info(id_model):
     cur.close()
     return redirect(url_for("view_model_info"))
 
-@app.route("/view_model_train_state")
+@app.route("/view_model_info/view_model_train_state")
 def view_model_train_state():
     cur = mysql.connection.cursor()
     sql = """
@@ -739,7 +739,7 @@ def view_model_train_state():
 
 ##cần fix
 
-@app.route("/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
+@app.route("/view_model_info/view_model_train_state/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
 def update_one_model_train_state(id_train):
     cur = mysql.connection.cursor()
     sql = """
@@ -1143,7 +1143,7 @@ def form_add_data_train():
     return render_template(session['role'] + "/form_add_data_train.html")
 
 @app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
-def change_to_data_train(id_data_input):
+def form_add_data_input_to_data_train(id_data_input):
     cur = mysql.connection.cursor()
     
     cur.execute("""
