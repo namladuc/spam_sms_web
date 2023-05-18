@@ -11,13 +11,13 @@
 <table>
   <thead>
     <tr>
-      <th>ID Data train</th>
-      <th>Text</th>
-      <th>Class ID</th>
-      <th>Create at</th>
-      <th>Create by</th>
-      <th>Update at</th>
-      <th>Update by</th>
+      <th>ID data input</th>
+      <th>ID user</th>
+      <th>Văn bản gốc</th>
+      <th>Tạo lúc</th>
+      <th>Tạo bởi</th>
+      <th>Cập nhật lúc</th>
+      <th>Cập nhật bởi</th>
       <th>Chức năng</th>
     </tr>
   </thead>
@@ -26,14 +26,14 @@
     <tr>
       <td>{{ row[0] }}</td>
       <td>{{ row[1] }}</td>
-      <td>{{ row[8] }}</td>
+      <td>{{ row[2] }}</td>
       <td>{{ row[3] }}</td>
       <td>{{ row[4] }}</td>
       <td>{{ row[5] }}</td>
       <td>{{ row[6] }}</td>
       <td>
-        <button onclick="editDataTrain('{{ row[0] }}')">Sửa</button>
-        <button onclick="deleteDataTrain('{{ row[0] }}')">Xóa</button>
+        <button onclick="editDataInput('{{ row[0] }}')">Sửa</button>
+        <button onclick="deleteDataInput('{{ row[0] }}')">Xóa</button>
       </td>
     </tr>
     {% endfor %}
@@ -41,12 +41,12 @@
 </table>
 
 <script>
-  function editDataTrain(id_dtrain) {
-    window.location.href = `/update_one_data_train/${id_dtrain}`;
+  function editDataInput(id_dinput) {
+    window.location.href = `/update_one_data_input/${id_dinput}`;
   }
 
-  function deleteDataTrain(id_dtrain) {
-    window.location.href = `/delete_one_data_train/${id_dtrain}`;
+  function deleteDataInput(id_dinput) {
+    window.location.href = `/delete_one_data_input/${id_dinput}`;
   }
 
   setTimeout(function() {

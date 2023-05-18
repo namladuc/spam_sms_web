@@ -378,8 +378,7 @@ def form_add_model():
                            model_infos = model_info_choice,
                            data_group = data_group)
     
-    
-# ---- ADMIN ONLY ----
+
 @app.route("/view_data_train", methods=['GET','POST'])
 def view_data_train():
     # View du lieu trong bang data train
@@ -393,6 +392,123 @@ def view_data_train():
     dtrain = cur.fetchall()
 
     return render_template(session['role'] + "/view_data_train.html", data=dtrain)
+
+
+@app.route("/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
+def update_one_data_train(id_dtrain):
+    cur = mysql.connection.cursor()
+    sql = """
+                    select * 
+                    from data_train
+                    join data_group_split on data_train.id_dtrain = data_group_split.id_dtrain
+                    WHERE data_train.id_dtrain = %s
+                  """
+    cur.execute(sql, (id_dtrain,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    info_one_data_train = records[0]
+
+    id_dgroup_list_selected = []
+    for record in records:
+        id_dgroup_list_selected.append(record[8])
+
+    sql_group_name = """
+                        select * 
+                        from data_group_info
+                        """
+    cur.execute(sql_group_name)
+    group_name_list = cur.fetchall()
+
+    if request.method == 'POST':
+        details = request.form
+        data_clean = step_corpus_for_one_text(details['text_original'].strip())
+        class_id = details['class_id'].strip()
+
+        cur.execute("SELECT * FROM data_train WHERE text = %s", (data_clean,))
+        check = cur.fetchall()
+        if (len(check) != 0) and id_dtrain not in [item[0] for item in check]:
+            return "Error2"
+
+        lst_group = list(details.keys())
+        lst_group.remove('text_original')
+        lst_group.remove('class_id')
+
+        # template sql
+        # sql_select_data_train_id = "SELECT id_dtrain FROM data_train WHERE text = %s"
+        #
+        # cur.execute(sql_select_data_train_id, (data_clean,))
+        # data_id = cur.fetchall()
+        # if len(data_id) == 0 and id_dtrain not in [item[0] for item in data_id]:
+        now = datetime.now()
+        update_at = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        cur.execute("UPDATE data_train SET text = %s, class_id = %s, update_at = %s, update_by = %s WHERE id_dtrain = %s",
+                    (data_clean, class_id, update_at, session['username'][1], id_dtrain))
+        mysql.connection.commit()
+
+        cur.execute("""
+                            DELETE FROM data_group_split WHERE id_dtrain = %s;
+                            """, (id_dtrain, ))
+        mysql.connection.commit()
+
+        for elm in group_name_list:
+            if elm[1] in lst_group:
+                cur.execute("""
+                                    INSERT INTO data_group_split(id_dtrain, id_dgroup)
+                                    VALUES (%s, %s)
+                                    """, (id_dtrain, elm[0]))
+                mysql.connection.commit()
+
+        cur.close()
+
+        flash("Chỉnh sửa thành công !!!")
+        return redirect(url_for('view_data_train'))
+
+    return render_template(session['role'] + "/update_one_data_train.html",
+                           data=info_one_data_train,
+                           id_dgroup_list_selected=id_dgroup_list_selected,
+                           group_name_list=group_name_list)
+
+@app.route("/delete_one_data_train/<int:id_dtrain>")
+def delete_one_data_train(id_dtrain):
+    cur = mysql.connection.cursor()
+    sql1 = """
+            SELECT * FROM data_train WHERE data_train.id_dtrain = %s
+        """
+    cur.execute(sql1, (id_dtrain,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+    sql2 = """
+                    SELECT * FROM data_group_split WHERE data_group_split.id_dtrain = %s
+                """
+    cur.execute(sql2, (id_dtrain,))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    sql_data_train = """
+                    DELETE FROM data_train
+                    WHERE id_dtrain = %s;
+                  """
+    sql_data_group_split = """
+                        DELETE FROM data_group_split
+                        WHERE id_dtrain = %s;
+                      """
+
+    cur.execute(sql_data_group_split, (id_dtrain,))
+    cur.execute(sql_data_train, (id_dtrain,))
+
+    mysql.connection.commit()
+
+    flash("Đã xóa thành công bản ghi dữ liệu huấn luyện có ID: " + str(id_dtrain))
+    cur.close()
+    return redirect(url_for("view_data_train"))
 
 
 @app.route("/view_data_group_info")
@@ -449,7 +565,7 @@ def delete_one_group_info(id_dgroup):
     records = cur.fetchall()
 
     if len(records) != 0:
-        flash("Không thể xóa model này!!")
+        flash("Không thể xóa nhóm dữ liệu này!!")
     else:
         sql = """
                 DELETE FROM data_group_info
@@ -932,6 +1048,62 @@ def view_one_model_train_state(id_train):
 def check_data_input():
     return None
 
+@app.route("/view_data_input")
+def view_data_input():
+    cur = mysql.connection.cursor()
+    if session['role'] == "admin":
+        sql = """
+                        SELECT *
+                        FROM data_input 
+                    """
+        cur.execute(sql)
+        records = cur.fetchall()
+    else:
+        sql = """
+                    SELECT *
+                    FROM data_input
+                    WHERE id_user = %s
+                """
+        cur.execute(sql, (session['username'][0], ))
+        records = cur.fetchall()
+
+    return render_template(session['role'] + "/view_data_input.html", data=records)
+
+@app.route("/view_distinct_data_input")
+def view_distinct_data_input():
+    cur = mysql.connection.cursor()
+    sql = """ 
+            SELECT MIN(id) AS id, id_user, original_text, create_by
+            FROM data_input
+            GROUP BY id_user, original_text, create_by;
+            """
+    cur.execute(sql)
+    records = cur.fetchall()
+    return render_template(session['role'] + "/view_distinct_data_input.html", data=records)
+
+@app.route("/delete_one_distinct_data_input/<int:id_user>&<string:original_text>", methods=['GET','POST'])
+def delete_one_distinct_data_input(id_user, original_text):
+    cur = mysql.connection.cursor()
+    sql = """
+            SELECT * FROM data_input WHERE data_input.id_user = %s and data_input.original_text = %s;
+        """
+    cur.execute(sql, (id_user, original_text))
+    records = cur.fetchall()
+
+    if len(records) == 0:
+        return "Error"
+
+    sql_delete_input_data = """
+                       DELETE FROM data_input
+                       WHERE data_input.id_user = %s and data_input.original_text = %s;
+                     """
+    cur.execute(sql_delete_input_data, (id_user, original_text))
+
+    mysql.connection.commit()
+    flash("Đã xóa thành công văn bản nhập vào : " + str(original_text) + "của User có ID :" + str(id_user))
+    cur.close()
+    return redirect(url_for("view_distinct_data_input"))
+
 @app.route("/view_account", methods=['GET','POST'])
 def view_account():
     cur = mysql.connection.cursor()
@@ -1311,3 +1483,5 @@ def is_spam_or_ham_result(id_train, text):
                            step_data = step_data,
                            step_title = step_title,
                            id_train = id_train)
+
+
