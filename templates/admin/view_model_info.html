@@ -25,15 +25,12 @@
               <a class="btn btn-delete btn-sm" type="button" title="Xóa tất cả các phần tử đã chọn"
                 onclick="deleteMoreRow(this)"><i class="fas fa-trash-alt"></i> Xóa phần tử đã chọn </a>
             </div>
+            <div class="col-sm-2">
+              <a class="btn btn-save btn-sm" href="/view_model_info/view_model_train_state" title="Trạng thái mô hình">
+                <i class="fa fa-spinner"></i> Trạng thái mô hình </a>
+            </div>
 
           </div>
-
-
-
-
-
-
-
           {% with messages = get_flashed_messages() %}
           {% if messages %}
           <div class="flash">
@@ -75,13 +72,7 @@
                     onclick="editModel('{{ row[0] }}')"><i class="fa fa-edit" aria-hidden="true"></i>
                   </button>
                 </td>
-
-
-                <!-- <td>
-        <button onclick="editModel('{{ row[0] }}')">Sửa</button>
-        <button onclick="deleteModel('{{ row[0] }}')">Xóa</button>
-      </td>
-    </tr> -->
+              </tr>
                 {% endfor %}
             </tbody>
           </table>
