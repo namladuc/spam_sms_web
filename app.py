@@ -673,7 +673,7 @@ def form_add_model_info():
     return render_template(session['role'] + "/form_add_model_info.html")
 
 
-@app.route("/update_one_model_info/<int:id_model>", methods=['GET','POST'])
+@app.route("/view_model_info/update_one_model_info/<int:id_model>", methods=['GET','POST'])
 def update_one_model_info(id_model):
     cur = mysql.connection.cursor()
     sql = """
