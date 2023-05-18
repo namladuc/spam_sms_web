@@ -739,7 +739,7 @@ def view_model_train_state():
 
 ##cần fix
 
-@app.route("/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
+@app.route("/view_model_info/view_model_train_state/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
 def update_one_model_train_state(id_train):
     cur = mysql.connection.cursor()
     sql = """
