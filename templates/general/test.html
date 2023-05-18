@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <title>Đăng nhập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/animate/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/css-hamburgers/hamburgers.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/util.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+</head>
+<body>
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-pic js-tilt" data-tilt>
+                    <img src="static/images/sms.jpg" alt="IMG">
+                </div>
+
+                <!--=====TIÊU ĐỀ======-->
+                <form class="login100-form validate-form" method="post" action="/login">
+                    <span class="login100-form-title">
+                        <b>ĐĂNG KÝ TÀI KHOẢN</b>
+                    </span>
+
+                <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
+                    <div class="wrap-input100 validate-input">
+                        {% if user_exits == 'True' %}
+                        <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        <strong>Tài khoản đã tồn tại!</strong> Nhập lại tài khoản
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    
+                    <div class="wrap-input100 validate-input">
+                        <label for="username"><b>Tên tài khoản</b></label>
+                        <input class="input100" type="text" id="username" name="username">
+                        
+                        <label for="fullname"><b>Họ và tên</b></label><br>
+                        <input class="input100" type="text" id="fullname" name="fullname">
+
+                        <label for="password"><b>Mật khẩu</b></label><br>
+                        <input autocomplete="off" class="input100" type="password" id="password" name="password">
+                  
+                        <label for="confirm_password"><b>Nhập lại mật khẩu</b></label>
+                        <input autocomplete="off" class="input100" type="password" id="confirm_password" name="confirm_password"><br><br>
+
+
+                        <input class="input100" type="text" placeholder="Tài khoản" name="username"
+                            id="username">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class='bx bx-user'></i>
+                        </span>
+                    </div>
+                    
+                    <div class="wrap-input100 validate-input">
+                        <label for="password"><b>Mật khẩu</b></label><br>
+                        <input autocomplete="off" class="input100" type="password" id="password" name="password">
+                        
+                        <label for="confirm_password"><b>Nhập lại mật khẩu</b></label>
+                        <input autocomplete="off" class="input100" type="password" id="confirm_password" name="confirm_password"><br><br>
+                        <!--<span toggle="#password-field" class="bx fa-fw bx-hide field-icon click-eye"></span>-->
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class='bx bx-key'></i>
+                        </span>
+                    </div>
+
+
+
+                    <!--=====ĐĂNG KÝ======-->
+                    <div class="container-login100-form-btn">
+                        <input type="submit" value="Đăng ký" id="submit" />
+                    </div>
+                    <!--=====LINK tạo tk======-->
+                    <div class="text-right p-t-12">
+                        <p>Bạn đã có tài khoản? <a class="txt2" href="/login">Đăng nhập</a>.</p>
+            </form>
+             <!--=====FOOTER======-->
+             <div class="text-center p-t-70 txt2">
+                SMS Spam <i class="far fa-copyright" aria-hidden="true"></i>
+                <script type="text/javascript">document.write(new Date().getFullYear());</script> 
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</body>
