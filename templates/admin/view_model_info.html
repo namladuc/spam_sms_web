@@ -1,45 +1,89 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash">
-      <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-      </ul>
+{% extends "base.html" %}
+{% block title %} Mô hình {% endblock title %}
+{% block content %}
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+      <li class="breadcrumb-item"><a href="">Mô hình</a></li>
+    </ul>
+    <div id="clock"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
+
+          <div class="row element-button">
+            <div class="col-sm-2">
+              <a class="btn btn-add btn-sm" href="/view_model_info/form_add_model_info" title="Thêm mô hình"><i
+                  class="fas fa-plus"></i>
+                Thêm mô hình</a>
+            </div>
+
+            <div class="col-sm-2">
+              <a class="btn btn-delete btn-sm" type="button" title="Xóa tất cả các phần tử đã chọn"
+                onclick="deleteMoreRow(this)"><i class="fas fa-trash-alt"></i> Xóa phần tử đã chọn </a>
+            </div>
+            <div class="col-sm-2">
+              <a class="btn btn-save btn-sm" href="/view_model_info/view_model_train_state" title="Trạng thái mô hình">
+                <i class="fa fa-spinner"></i> Trạng thái mô hình </a>
+            </div>
+
+          </div>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="flash">
+            <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+          {% endwith %}
+
+
+          <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+            id="sampleTable">
+            <thead>
+              <tr>
+                <th width="10"><input type="checkbox" id="all"></th>
+                <th width="10">ID Model</th>
+                <th width="60">Model name</th>
+                <th width="60">Model class</th>
+                <th width="60">Description</th>
+                <th width="30">Chức năng</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data %}
+              <tr>
+                <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td class="table-td-center">
+                  <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                    onclick="deleteModel('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
+                  </button>
+                  <button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp"
+                    onclick="editModel('{{ row[0] }}')"><i class="fa fa-edit" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-  {% endif %}
-{% endwith %}
+  </div>
+</main>
+<!-- <a href="/form_add_model_info">Thêm mô hình</a> -->
 
-
-<table>
-  <thead>
-    <tr>
-      <th>ID Model</th>
-      <th>Model name</th>
-      <th>Model class</th>
-      <th>Description</th>
-      <th>Chức năng</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in data %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ row[3] }}</td>
-      <td>
-        <button onclick="editModel('{{ row[0] }}')">Sửa</button>
-        <button onclick="deleteModel('{{ row[0] }}')">Xóa</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<a href="/form_add_model_info">Thêm mô hình</a>
-
-<script>
+<!-- <script>
   function editModel(id_model) {
     window.location.href = `/update_one_model_info/${id_model}`;
   }
@@ -48,7 +92,88 @@
     window.location.href = `/delete_one_model_info/${id_model}`;
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     document.querySelector('.flash').style.display = 'none';
   }, 3000);
+</script> -->
+<!-- Essential javascripts for application to work-->
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!-- Page specific javascripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<!-- Data table plugin-->
+<!-- <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/jquery.dataTables.min.js')}}"></script>
+<!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
+<script>
+  function deleteModel(id_model) {
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa mô hình này?",
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href = `/delete_one_model_info/${id_model}`;
+      }
+    });
+  }
+  function editModel(id_model) {
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn sửa mô hình này?",
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    }).then((willEdit) => {
+      if (willEdit) {
+        window.location.href = `/view_model_info/update_one_model_info/${id_model}`;
+      }
+    });
+  }
+
+  function deleteMoreRow(r) {
+    var numRow = document.getElementById("sampleTable").rows.length;
+    var id_model = [];
+    $('#sampleTable tbody :checkbox').each(function () {
+        let i = this.parentNode.parentNode.rowIndex;
+        if (this.checked) {
+          id_model.push(this.parentNode.parentNode.childNodes[3].textContent);
+        }
+    });
+
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa những mô hình này?", // index = 3
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          for (let i = 0; i < id_model.length; i++) {
+            $.ajax({
+              url:"/delete_one_model_info/" + id_model[i],
+              context: document.body
+            })
+          }
+          swal("Đã xóa thành công.!", {});
+        }
+        location.reload();
+      });
+  }
+
+  oTable = $('#sampleTable').dataTable();
+  $('#all').click(function (e) {
+    $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
+    e.stopImmediatePropagation();
+  });
+
+  setTimeout(function () {
+    document.querySelector('.flash').style.display = 'none';
+  }, 3000);
+  
 </script>
+{% endblock content %}

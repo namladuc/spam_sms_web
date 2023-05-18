@@ -1,31 +1,215 @@
-Num of group data: {{num_of_group_data}}
-<br>
-Count train data records: {{count_train_data}}
-<br>
-Count data input records: {{count_data_input}}
-<br>
-Count model in DB: {{count_num_model}}
-<br>
-Count model active: {{count_num_model_active}}
-<br>
+{% extends "base.html" %}
+{% block title %} Trang chủ {% endblock title %}
+{% block content %}
 
-<br>
+<<main class="app-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><a href="#"><b>Trang chủ</b></a></li>
+        </ul>
+        <div id="clock"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!--Left-->
+    <div class="col-md-12 col-lg-6">
+      <div class="row">
+        <!-- col-6 -->
+        <div class="col-md-6">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số nhóm dữ liệu</h4>
+              <p><b>{{num_of_group_data}}</b></p>
+            </div>
+          </div>
+        </div>
+        <!-- col-6 -->
+        <div class="col-md-6">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Độ lớn dữ liệu</h4>
+              <p><b>{{count_train_data}}</b></p>
+            </div>
+          </div>
+        </div>
+        <!-- col-6 -->
+        <div class="col-md-6">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Độ lớn dữ liệu đầu vào</h4>
+              <p><b>{{count_data_input}}</b></p>
+            </div>
+          </div>
+        </div>
+        <!-- col-6 -->
+        <div class="col-md-6">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số lượng mô hình</h4>
+              <p><b>{{count_num_model}}</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div id='graphs_group_count' class='graphs_group_count'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
+      <!-- col-6 -->
+      <div class="col-md-6">
+        <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+          <div class="info">
+            <h4>Số mô hình có thể sử dụng</h4>
+            <p><b>{{count_num_model_active}}</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <!-- col-12 -->
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Biểu đồ</h3>
+            <div>
+              <div class="embed-responsive embed-responsive-16by9">
+                <div id='graphs_group_count' class='embed-responsive-item'
+                  style="height: 500px; width: 100%; box-shadow: 5px 5px 5px #888888; margin-bottom: 20px;">
+              </div>
+            </div>
+          </div>
 
-<br>
 
-<div id='graphs_day_input' class='graphs_day_input'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
+        </div>
+      </div>
 
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <div class="col-md-12">
+      <div class="row">
+        <!-- col-12 -->
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Biểu đồ</h3>
+            <div>
+              <div class="embed-responsive embed-responsive-16by9">
+                <div id='graphs_day_input' class='embed-responsive-item'
+                  style="height: 500px; width: 100%; box-shadow: 5px 5px 5px #888888;"></div>
+                <!-- <canvas class="embed-responsive-item" id="graphs_day_input"></canvas> -->
+              </div>
+            </div>
+          </div>
 
-<script type='text/javascript'>
-    var graphs_group_count = {{graphJSON_group_count | safe}};
-    Plotly.plot('graphs_group_count',graphs_group_count,{});
-    var graphs_day_input = {{graphJSON_day_input | safe}};
-    Plotly.plot('graphs_day_input',graphs_day_input,{});
-  </script></html>
+
+        </div>
+      </div>
+      <!--END left-->
+    </div>
+    <div class="text-center" style="font-size: 13px">
+      <p><b>
+          <script type="text/javascript">
+            document.write(new Date().getFullYear());
+          </script> SMS Spam
+        </b></p>
+    </div>
+    </main>
+
+
+
+
+    <!-- --- -------------------------------------------------------->
+
+    <!-- <div class="col-md-12">
+        <div class="tile">
+          <h3 class="tile-title">Giới thiệu</h3>
+          <div class="tile-body">
+            <div class="col-md-12 col-lg-12">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số nhóm dữ liệu</h4>
+              <p><b>{{num_of_group_data}}</b></p>
+            </div>
+          </div>
+        </div> -->
+    <!-- col-6 -->
+    <!-- <div class="col-md-12">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Độ lớn dữ liệu</h4>
+              <p><b>{{count_train_data}}</b></p>
+            </div>
+          </div>
+        </div> -->
+    <!-- col-6 -->
+    <!-- <div class="col-md-12">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Độ lớn dữ liệu đầu vào</h4>
+              <p><b>{{count_data_input}}</b></p>
+            </div>
+          </div>
+        </div> -->
+    <!-- col-6 -->
+    <!-- <div class="col-md-12">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số lượng mô hình</h4>
+              <p><b>{{count_num_model}}</b></p>
+            </div>
+          </div>
+        </div> -->
+    <!-- col-6 -->
+    <!-- <div class="col-md-12">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số mô hình có thể sử dụng</h4>
+              <p><b>{{count_num_model_active}}</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Biểu đồ</h3>
+            <div class="tile-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div id='graphs_group_count' class='graphs_group_count' style="height: 500px; width: 100%;border: 3px solid; box-shadow: 5px 5px 5px #888888; margin-bottom: 20px;"></div>
+                  </div>
+
+                  <div class="col-md-12">
+                    <div id='graphs_day_input' class='graphs_day_input' style="height: 500px; width: 100%; border: 3px solid; box-shadow: 5px 5px 5px #888888;"></div>
+                  </div>
+                </div>
+              </div>
+
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </main> -->
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+    <script type='text/javascript'>
+      var graphs_group_count = {{ graphJSON_group_count | safe}};
+      Plotly.plot('graphs_group_count', graphs_group_count, {});
+      var graphs_day_input = {{ graphJSON_day_input | safe}};
+      Plotly.plot('graphs_day_input', graphs_day_input, {});
+    </script>
+    <script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+    <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+    <!--===============================================================================================-->
+    <script src="{{url_for('static', filename='doc/js/plugins/chart.js')}}"></script>
+    <!--===============================================================================================-->
+    {% endblock content %}

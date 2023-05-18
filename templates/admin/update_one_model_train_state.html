@@ -1,65 +1,97 @@
-<form method="post" action="/update_one_model_train_state/{{ current_data[0] }}" enctype ="multipart/form-data">
-    <span >
-        <b>Sửa mô hình</b>
-    </span>
-        <div>
-            {% if err_code %}
-            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
-              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-              <strong>{{ err_code }}</strong>
+{% extends "base.html" %}
+{% block title%} Chỉnh sửa mô hình {% endblock %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_model_info">Mô hình</a></li>
+            <li class="breadcrumb-item"><a href="/view_model_info/view_model_train_state">Trạng thái mô hình</a></li>
+            <li class="breadcrumb-item"><a href="">Chỉnh sửa trạng thái mô hình</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="tile">
+
+                <h3 class="tile-title">Chỉnh sửa trạng mô hình</h3>
+                <div class="tile-body">
+
+
+                    <form class="row" method="post"
+                        action="/view_model_info/view_model_train_state/update_one_model_train_state/{{ current_data[0] }}"
+                        enctype="multipart/form-data">
+                        <div>
+                            {% if err_code %}
+                            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>{{ err_code }}</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thông tin mô hình</label>
+                            <select class="form-control" id="model_info_update" name="model_info_update">
+                                {% for data in model_infos %}
+                                <option> {{data}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thông tin dữ liệu</label>
+                            <select class="form-control" id="info_data_update" name="info_data_update">
+                                {% for data in data_group %}
+
+                                <option value="{{data[0]}}"> {{data[1]}} </option>
+
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thời gian huấn luyện</label>
+                            <input class="form-control" type="text" title="Thời gian huấn luyện"
+                                name="time_train_update" id="time_train_update" value="{{ current_data[4] }}"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Accuracy của mô hình trên tập train: </label>
+                            <input class="form-control" type="text" title="ACC train" name="acc_model_train_update"
+                                id="acc_model_train_update" value="{{ current_data[5] }}"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Accuracy của mô hình trên tập test: </label>
+                            <input class="form-control" type="text" title="ACC test" name="acc_model_test_update"
+                                id="acc_model_test_update" value="{{ current_data[6] }}"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Có thể sử dụng</label>
+                            {% if current_data[3] == 1 %}
+                            <input type="checkbox" name="can_use_update" id="can_use_update" checked>
+                            {% else %}
+                            <input type="checkbox" name="can_use_update" id="can_use_update">
+                            {% endif %}
+                        </div>
+                        <div class="form-group col-md-8">
+                        </div>
+
+                        <!--=====ĐĂNG NHẬP======-->
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Lưu" />
+                            <a class="btn btn-cancel" href="/view_model_info/view_model_train_state">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endif %}
         </div>
-
-        <div>
-            <label>Thông tin mô hình</label>
-            <select id="model_info_update" name="model_info_update">
-              {% for data in model_infos %}
-              <option> {{data}} </option>
-              {% endfor %}
-            </select>
-        </div>
-
-        <div >
-            <label>Thông tin dữ liệu</label>
-            <select id="info_data_update" name="info_data_update">
-              {% for data in data_group %}
-
-              <option value="{{data[0]}}"> {{data[1]}} </option>
-
-              {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label class="control-label">Thời gian huấn luyện</label>
-            <input type="text" title="Thời gian huấn luyện" name="time_train_update"
-                id="time_train_update" value="{{ current_data[4] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Accuracy của mô hình trên tập train: </label>
-            <input type="text" title="ACC train" name="acc_model_train_update"
-                id="acc_model_train_update" value="{{ current_data[5] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Accuracy của mô hình trên tập test: </label>
-            <input type="text" title="ACC test" name="acc_model_test_update"
-                id="acc_model_test_update" value="{{ current_data[6] }}" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Có thể sử dụng</label>
-            {% if current_data[3] == 1 %}
-            <input type="checkbox" name="can_use_update" id="can_use_update" checked>
-            {% else %}
-            <input type="checkbox" name="can_use_update" id="can_use_update" >
-            {% endif %}
-        </div>
-
-        <!--=====ĐĂNG NHẬP======-->
-        <div>
-            <input type="submit" value="Lưu" id="submit" />
-        </div>
-</form>
+    </div>
+</main>
+{% endblock %}
