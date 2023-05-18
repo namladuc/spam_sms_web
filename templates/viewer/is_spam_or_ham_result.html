@@ -1,0 +1,23 @@
+Your messege is {{label_pred}}
+
+<br>
+
+Preprocess step using:
+
+<br>
+
+{% for index in step_index %}
+
+Step {{index + 1}}: {{step_title[index]}}
+
+<br>
+
+{{step_data[index]}}
+
+<br>
+
+{% endfor %}
+
+<br>
+
+<a href="/is_spam_or_ham/{{id_train}}">Another checking ?</a>
