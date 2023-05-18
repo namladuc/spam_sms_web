@@ -244,7 +244,8 @@ def home():
                            count_num_model = count_num_model,
                            count_num_model_active = count_num_model_active,
                            graphJSON_group_count = graphJSON_group_count,
-                           graphJSON_day_input = graphJSON_day_input)
+                           graphJSON_day_input = graphJSON_day_input,
+                           userinfo = session['username'])
 
 @app.route("/form_add_data_group_info", methods=['GET','POST'])
 def form_add_data_group_info():
@@ -284,7 +285,7 @@ def form_add_data_group_info():
         """
         cur.execute(sql, (group_name, pathToFile, test_size))
         mysql.connection.commit()
-    return render_template(session['role'] + "/form_add_data_group_info.html")
+    return render_template(session['role'] + "/form_add_data_group_info.html", userinfo = session['username'])
 
 @app.route("/view_model_info/view_model_train_state/form_add_model", methods=['GET','POST'])
 def form_add_model():
@@ -375,7 +376,8 @@ def form_add_model():
     
     return render_template(session['role'] + "/form_add_model.html",
                            model_infos = model_info_choice,
-                           data_group = data_group)
+                           data_group = data_group,
+                           userinfo = session['username'])
     
 
 @app.route("/view_data_train", methods=['GET','POST'])
@@ -390,7 +392,7 @@ def view_data_train():
     cur.execute(sql)
     dtrain = cur.fetchall()
 
-    return render_template(session['role'] + "/view_data_train.html", data=dtrain)
+    return render_template(session['role'] + "/view_data_train.html", data=dtrain, userinfo = session['username'])
 
 
 @app.route("/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
@@ -469,7 +471,7 @@ def update_one_data_train(id_dtrain):
     return render_template(session['role'] + "/update_one_data_train.html",
                            data=info_one_data_train,
                            id_dgroup_list_selected=id_dgroup_list_selected,
-                           group_name_list=group_name_list)
+                           group_name_list=group_name_list, userinfo = session['username'])
 
 @app.route("/delete_one_data_train/<int:id_dtrain>")
 def delete_one_data_train(id_dtrain):
@@ -520,7 +522,7 @@ def view_data_group_info():
     cur.execute(sql)
     dgroup_infos = cur.fetchall()
 
-    return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos)
+    return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos, userinfo=session['username'])
 
 @app.route("/update_one_group_info/<int:id_dgroup>", methods=['GET','POST'])
 def update_one_group_info(id_dgroup):
@@ -550,7 +552,7 @@ def update_one_group_info(id_dgroup):
 
         flash("Chỉnh sửa thành công !!!")
         return redirect(url_for('view_data_group_info'))
-    return render_template(session['role'] + "/update_one_group_info.html", data=record)
+    return render_template(session['role'] + "/update_one_group_info.html", data=record, userinfo=session['username'])
 
 @app.route("/delete_one_group_info/<int:id_dgroup>")
 def delete_one_group_info(id_dgroup):
@@ -754,7 +756,8 @@ def view_one_group_info(id_dgroup):
                            graphJSON_acc_test = graphJSON_acc_test,
                            graphJSON_time_train = graphJSON_time_train,
                            num_rows = num_rows,
-                           group_info = check_exist[0])
+                           group_info = check_exist[0],
+                           userinfo=session['username'])
 
 @app.route("/view_model_info")
 def view_model_info():
@@ -766,7 +769,7 @@ def view_model_info():
     cur.execute(sql)
     model_info = cur.fetchall()
 
-    return render_template(session['role'] + "/view_model_info.html", data=model_info)
+    return render_template(session['role'] + "/view_model_info.html", data=model_info, userinfo=session['username'])
 
 @app.route("/view_model_info/form_add_model_info", methods=['GET','POST'])
 def form_add_model_info():
@@ -786,7 +789,7 @@ def form_add_model_info():
         flash("Thêm mô hình thành công !!!")
         return redirect(url_for('view_model_info'))
 
-    return render_template(session['role'] + "/form_add_model_info.html")
+    return render_template(session['role'] + "/form_add_model_info.html", userinfo=session['username'])
 
 
 @app.route("/view_model_info/update_one_model_info/<int:id_model>", methods=['GET','POST'])
@@ -814,7 +817,7 @@ def update_one_model_info(id_model):
         flash("Chỉnh sửa thành công !!!")
         return redirect(url_for('view_model_info'))
 
-    return render_template(session['role'] + "/update_one_model_info.html", data=one_model_info)
+    return render_template(session['role'] + "/update_one_model_info.html", data=one_model_info, userinfo=session['username'])
 
 # chưa có thông báo xác nhận xóa không
 @app.route("/delete_one_model_info/<int:id_model>")
@@ -851,7 +854,7 @@ def view_model_train_state():
     cur.execute(sql)
     model_train_state = cur.fetchall()
 
-    return render_template(session['role'] + "/view_model_train_state.html", data=model_train_state)
+    return render_template(session['role'] + "/view_model_train_state.html", data=model_train_state, userinfo=session['username'])
 
 ##cần fix
 
@@ -938,7 +941,8 @@ def update_one_model_train_state(id_train):
     return render_template(session['role'] + "/update_one_model_train_state.html",
                            current_data=one_model_train_state[0],
                            model_infos=model_info_choice,
-                           data_group=data_group)
+                           data_group=data_group,
+                           userinfo=session['username'])
 
 # chưa có thông báo xác nhận xóa không
 @app.route("/delete_one_model_train_state/<int:id_train>")
@@ -1037,7 +1041,8 @@ def view_one_model_train_state(id_train):
                            test_info = test_info,
                            state_info = state_info,
                            group_data_name = group_data_name,
-                           test_size = test_size)
+                           test_size = test_size,
+                           userinfo=session['username'])
 
 # @app.route("/view_data_group/<string:group_id>_<string:mode>", methods=['GET','POST'])
 # def view_data_group(group_id, mode):
@@ -1066,7 +1071,7 @@ def view_data_input():
         cur.execute(sql, (session['username'][0], ))
         records = cur.fetchall()
 
-    return render_template(session['role'] + "/view_data_input.html", data=records)
+    return render_template(session['role'] + "/view_data_input.html", data=records, userinfo=session['username'])
 
 @app.route("/view_distinct_data_input")
 def view_distinct_data_input():
@@ -1078,7 +1083,7 @@ def view_distinct_data_input():
             """
     cur.execute(sql)
     records = cur.fetchall()
-    return render_template(session['role'] + "/view_distinct_data_input.html", data=records)
+    return render_template(session['role'] + "/view_distinct_data_input.html", data=records, userinfo=session['username'])
 
 @app.route("/delete_one_distinct_data_input/<int:id_user>&<string:original_text>", methods=['GET','POST'])
 def delete_one_distinct_data_input(id_user, original_text):
@@ -1114,7 +1119,7 @@ def view_account():
     cur.execute(sql)
     accounts = cur.fetchall()
 
-    return render_template(session['role'] + "/view_account.html", data=accounts)
+    return render_template(session['role'] + "/view_account.html", data=accounts, userinfo=session['username'])
 
 @app.route("/form_add_account", methods=['GET','POST'])
 def form_add_account():
@@ -1158,9 +1163,9 @@ def form_add_account():
         cur.close()
 
         message = "Tài khoản đã được tạo thành công!"
-        return render_template(session['role'] + '/form_add_account.html', message=message,  list_role=list_role)
+        return render_template(session['role'] + '/form_add_account.html', message=message,  list_role=list_role, userinfo=session['username'])
 
-    return render_template(session['role'] + '/form_add_account.html', list_role=list_role)
+    return render_template(session['role'] + '/form_add_account.html', list_role=list_role, userinfo=session['username'])
 
 @app.route("/update_one_account/<int:id_user>", methods=['GET','POST'])
 def update_one_account(id_user):
@@ -1198,7 +1203,7 @@ def update_one_account(id_user):
         flash("Chỉnh sửa thành công !!!")
         return redirect(url_for('view_account'))
 
-    return render_template(session['role'] + "/update_one_account.html", data=one_account[0])
+    return render_template(session['role'] + "/update_one_account.html", data=one_account[0], userinfo=session['username'])
 
 
 @app.route("/delete_one_account/<int:id_user>")
@@ -1312,7 +1317,7 @@ def form_add_data_train():
                     cur.execute(sql_insert_group, (data_id, int(id_group)))
                     mysql.connection.commit()
         return redirect(url_for('form_add_data_train'))
-    return render_template(session['role'] + "/form_add_data_train.html")
+    return render_template(session['role'] + "/form_add_data_train.html", userinfo=session['username'])
 
 @app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def form_add_data_input_to_data_train(id_data_input):
@@ -1374,7 +1379,8 @@ def form_add_data_input_to_data_train(id_data_input):
     return render_template(session['role'] + "/form_add_data_input_to_data_train.html",
                            id_data_input = id_data_input,
                            data = data,
-                           data_group_info = data_group_info)
+                           data_group_info = data_group_info,
+                           userinfo=session['username'])
 
 # ---- ADMIN ONLY ----
 
@@ -1416,7 +1422,7 @@ def is_spam_or_ham(id_train = ''):
         if "/" in text_input:
             text_input = text_input.replace("/","")
         
-        return redirect(url_for("is_spam_or_ham_result", id_train = model_train_id, text = text_input))
+        return redirect(url_for("is_spam_or_ham_result", id_train = model_train_id, text = text_input, userinfo=session['username']))
     
     model_trains_list = []
     for i in range(len(model_trains)):
@@ -1427,7 +1433,7 @@ def is_spam_or_ham(id_train = ''):
     
     return render_template(session['role'] + "/is_spam_or_ham.html",
                            model_trains = model_trains_list,
-                           id_train = id_train)
+                           id_train = id_train, userinfo=session['username'])
      
     
     
@@ -1481,6 +1487,7 @@ def is_spam_or_ham_result(id_train, text):
                            step_index = step_index,
                            step_data = step_data,
                            step_title = step_title,
-                           id_train = id_train)
+                           id_train = id_train,
+                           userinfo=session['username'])
 
 
