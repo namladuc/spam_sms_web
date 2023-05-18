@@ -1143,7 +1143,7 @@ def form_add_data_train():
     return render_template(session['role'] + "/form_add_data_train.html")
 
 @app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
-def change_to_data_train(id_data_input):
+def form_add_data_input_to_data_train(id_data_input):
     cur = mysql.connection.cursor()
     
     cur.execute("""
