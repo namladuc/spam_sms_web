@@ -1,0 +1,50 @@
+<form method="post" action="/is_spam_or_ham/{{id_train}}" enctype ="multipart/form-data">
+    <span >
+        <b>Kiểm tra tin nhắn là 'Spam' hay 'Ham'</b>
+    </span>
+
+        <div>
+            {% if err_code %}
+            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <strong>{{ err_code }}</strong>
+            </div>
+            {% endif %}
+        </div>
+
+        <div >
+            <label>Lựa chọn mô hình</label>
+            <select id="model_train_id" name="model_train_id" onchange="if (this.value) window.location.href='/is_spam_or_ham/' + this.value">
+              {% for data in model_trains %}
+
+              <option value="{{data[0]}}"> {{data[1]}} </option>
+
+              {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="control-label">Nhập tin nhắn</label>
+            <input type="text" title="text_input" name="text_input"
+                id="text_input">
+        </div>
+
+        <!--=====ĐĂNG NHẬP======-->
+        <div>
+            <input type="submit" value="Kiểm tra" id="submit" />
+        </div>
+</form>
+
+<script>
+    /*
+    $(function(){
+        // bind change event to select
+        $('#model_train_id').on('change', function () {
+            var url = $(this).val(); // get selected value
+            if (url) { // require a URL
+                window.location = url; // redirect
+            }
+            return false;
+        });
+      });*/
+</script>

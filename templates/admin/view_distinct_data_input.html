@@ -1,0 +1,49 @@
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash">
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<table>
+  <thead>
+    <tr>
+      <th>ID input data</th>
+      <th>ID user</th>
+      <th>Văn bản gốc</th>
+      <th>Tạo bởi</th>
+      <th>Chức năng</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data %}
+    <tr>
+      <td>{{ row[0] }}</td>
+      <td>{{ row[1] }}</td>
+      <td>{{ row[2] }}</td>
+      <td>{{ row[3] }}</td>
+      <td>
+        <button onclick="addDataInput('{{ row[0] }}')">Thêm vào dữ liệu huấn luyện</button>
+        <button onclick="deleteDistinctDataInput('{{ row[1] }}', '{{ row[2] }}')">Xóa</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  function addDataInput(id_input_data) {
+    window.location.href = `/form_add_data_input_to_data_train/${id_input_data}`;
+  }
+
+  function deleteDistinctDataInput(id_user, original_text) {
+    window.location.href = `/delete_one_distinct_data_input/${id_user}&${original_text}`;
+  }
+
+  setTimeout(function() {
+    document.querySelector('.flash').style.display = 'none';
+  }, 3000);
+</script>
