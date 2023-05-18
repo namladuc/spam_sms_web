@@ -125,15 +125,8 @@
     });
   }
   function editModel(id_model) {
-    swal({
-      title: "Cảnh báo",
-      text: "Bạn có chắc chắn là muốn sửa mô hình này?",
-      buttons: ["Hủy bỏ", "Đồng ý"],
-    }).then((willEdit) => {
-      if (willEdit) {
+    
         window.location.href = `/view_model_info/update_one_model_info/${id_model}`;
-      }
-    });
   }
 
   function deleteMoreRow(r) {

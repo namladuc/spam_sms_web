@@ -980,7 +980,7 @@ def delete_one_model_train_state(id_train):
     cur.close()
     return redirect(url_for("view_model_train_state"))
 
-@app.route("/view_one_model_train_state/<string:id_train>", methods=['GET','POST'])
+@app.route("/view_model_info/view_model_train_state/view_one_model_train_state/<string:id_train>", methods=['GET','POST'])
 def view_one_model_train_state(id_train):
     cur = mysql.connection.cursor()
     
