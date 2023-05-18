@@ -19,6 +19,7 @@
       <th>Văn bản gốc</th>
       <th>Tạo lúc</th>
       <th>Tạo bởi</th>
+      <th>Chức năng</th>
     </tr>
   </thead>
   <tbody>
@@ -29,6 +30,7 @@
       <td>{{ row[2] }}</td>
       <td>{{ row[3] }}</td>
       <td>{{ row[4] }}</td>
+      <th><button onclick="deleteDataInput('{{ row[0] }}')">Xóa</button></th>
     </tr>
     {% endfor %}
   </tbody>
@@ -37,6 +39,10 @@
 <script>
   function viewDistinctDataInput() {
     window.location.href = `/view_distinct_data_input`;
+  }
+
+  function deleteDataInput(id_data_input) {
+    window.location.href = `/delete_one_data_input/${id_data_input}`;
   }
 
   setTimeout(function() {
