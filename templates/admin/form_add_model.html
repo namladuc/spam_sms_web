@@ -1,70 +1,100 @@
-<form method="post" action="/view_model_info/view_model_train_state/form_add_model" enctype ="multipart/form-data">
-    <span >
-        <b>Thêm mô hình</b>
-    </span>
+{% extends "base.html" %}
+{% block title%} Thêm trạng thái mô hình {% endblock %}
+{% block content %}
+<main class="app-content"></div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_model_info">Mô hình</a></li>
+            <li class="breadcrumb-item"><a href="/view_model_info/view_model_train_state">Trạng thái mô hình</a></li>
+            <li class="breadcrumb-item"><a href="">Thêm trạng thái mô hình</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-    <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
-        <div>
-            {% if err_code %}
-            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
-              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-              <strong>{{ err_code }}</strong> 
+            <div class="tile">
+
+                <h3 class="tile-title">Thêm trạng thái Mô hình</h3>
+                <div class="tile-body">
+
+                    <form class="row" method="post" action="/view_model_info/view_model_train_state/form_add_model"
+                        enctype="multipart/form-data">
+
+                        <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
+                        <div>
+                            {% if err_code %}
+                            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>{{ err_code }}</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thông tin mô hình</label>
+                            <select class="form-control" id="model_info" name="model_info">
+                                {% for data in model_infos %}
+
+                                <option> {{data}} </option>
+
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Upload model file</label>
+                            <input class="form-control" type="file" style="height:45px;" id="FileModelUpload"
+                                name="FileModelUpload" class="form-control" id="FileModelUpload" />
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thông tin dữ liệu</label>
+                            <select class="form-control" id="info_data" name="info_data">
+                                {% for data in data_group %}
+
+                                <option> {{data[1]}} </option>
+
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Thời gian huấn luyện</label>
+                            <input class="form-control" type="text" title="Thời gian huấn luyện" name="time_train"
+                                id="time_train" placeholder="Tính theo giây" pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Accuracy của mô hình trên tập train: </label>
+                            <input class="form-control" type="text" title="Thời gian huấn luyện" name="acc_model_train"
+                                id="acc_model_train" placeholder="Tính theo số thực (ex: 1)"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Accuracy của mô hình trên tập test: </label>
+                            <input class="form-control" type="text" title="Thời gian huấn luyện" name="acc_model_test"
+                                id="acc_model_test" placeholder="Tính theo số thực (ex: 1)"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+">
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Có thể sử dụng</label>
+                            <input type="checkbox" name="can_use" id="can_use">
+                        </div>
+                        <div class="form-group col-md-8">
+                        </div>
+
+                        <!--=====ĐĂNG NHẬP======-->
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Thêm" />
+                            <a class="btn btn-cancel" href="/view_model_info/view_model_train_state">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endif %}
         </div>
-
-        <div >
-            <label>Thông tin mô hình</label>
-            <select id="model_info" name="model_info">
-              {% for data in model_infos %}
-
-              <option> {{data}} </option>
-
-              {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label class="control-label">Upload model file</label>
-            <input type="file" style="height:45px;" id="FileModelUpload" name="FileModelUpload" class="form-control" id="FileModelUpload" />
-        </div>
-
-        <div >
-            <label>Thông tin dữ liệu</label>
-            <select id="info_data" name="info_data">
-              {% for data in data_group %}
-
-              <option> {{data[1]}} </option>
-
-              {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label class="control-label">Thời gian huấn luyện</label>
-            <input type="text" title="Thời gian huấn luyện" name="time_train"
-                id="time_train" placeholder="Tính theo giây" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Accuracy của mô hình trên tập train: </label>
-            <input type="text" title="Thời gian huấn luyện" name="acc_model_train"
-                id="acc_model_train" placeholder="Tính theo số thực (ex: 1)" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Accuracy của mô hình trên tập test: </label>
-            <input type="text" title="Thời gian huấn luyện" name="acc_model_test"
-                id="acc_model_test" placeholder="Tính theo số thực (ex: 1)" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <div>
-            <label class="control-label">Có thể sử dụng</label>
-            <input type="checkbox" name="can_use" id="can_use">
-        </div>
-
-        <!--=====ĐĂNG NHẬP======-->
-        <div>
-            <input type="submit" value="Lưu" id="submit" />
-        </div>
-</form>
+    </div>
+</main>
+{% endblock %}
