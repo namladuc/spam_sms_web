@@ -1,28 +1,50 @@
-<form method="post" action="/form_add_model_info" enctype ="multipart/form-data">
-    <span >
-        <b>Sửa thông tin mô hình</b>
-    </span>
-        <div>
-            <label class="control-label">Tên mô hình: </label>
-            <input type="text" title="model_name" name="model_name"
-                id="model_name">
-        </div>
+{% extends "base.html" %}
+{% block title%} Thêm mô hình {% endblock %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_model_info">Mô hình</a></li>
+            <li class="breadcrumb-item"><a href="">Thêm Mô hình</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div>
-            <label>Loại mô hình: </label>
-            <select id="model_class" name="model_class">
-                <option value="Sklearn">Sklearn</option>
-                <option value="Numpy">Numpy</option>
-            </select>
-        </div>
+            <div class="tile">
 
-        <div>
-            <label>Mô tả mô hình: </label>
-            <input type="text" title="description" name="description"
-                id="description">
-        </div>
+                <h3 class="tile-title">Tạo mới Mô hình</h3>
+                <div class="tile-body">
+                    <form class="row" method="post" action="/view_model_info/form_add_model_info"
+                        enctype="multipart/form-data">
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Tên mô hình: </label>
+                            <input class="form-control" type="text" title="model_name" name="model_name"
+                                id="model_name">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Loại mô hình: </label>
+                            <select class="form-control" id="model_class" name="model_class">
+                                <option value="Sklearn">Sklearn</option>
+                                <option value="Numpy">Numpy</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Mô tả mô hình: </label>
+                            <input class="form-control" type="text" title="description" name="description"
+                                id="description">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" onclick="showSuccessToast();"
+                                value="Thêm" />
+                            <a class="btn btn-cancel" href="/view_model_info">Hủy bỏ</a>
+                        </div>
+                    </form>
 
-        <div>
-            <input type="submit" value="Lưu" id="submit">
+                </div>
+            </div>
         </div>
-</form>
+    </div>
+</main>
+{% endblock %}
