@@ -244,7 +244,8 @@ def home():
                            count_num_model = count_num_model,
                            count_num_model_active = count_num_model_active,
                            graphJSON_group_count = graphJSON_group_count,
-                           graphJSON_day_input = graphJSON_day_input)
+                           graphJSON_day_input = graphJSON_day_input,
+                           userinfo = session['username'])
 
 @app.route("/form_add_data_group_info", methods=['GET','POST'])
 def form_add_data_group_info():
