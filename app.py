@@ -398,7 +398,7 @@ def view_data_train():
     return render_template(session['role'] + "/view_data_train.html", data=dtrain, userinfo = session['username'])
 
 
-@app.route("/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
+@app.route("/view_data_train/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
 def update_one_data_train(id_dtrain):
     cur = mysql.connection.cursor()
     sql = """
@@ -1243,7 +1243,7 @@ def delete_one_account(id_user):
     return redirect(url_for("view_account"))
 
 
-@app.route("/form_add_data_train", methods=['GET','POST'])
+@app.route("/view_data_train/form_add_data_train", methods=['GET','POST'])
 def form_add_data_train():
     cur = mysql.connection.cursor()
     

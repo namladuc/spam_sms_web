@@ -1,41 +1,69 @@
-<form method="post" action="/update_one_data_train/{{data[0]}}" enctype ="multipart/form-data">
-    <span >
-        <b>Chỉnh sửa dữ liệu huấn luyện cho dữ liệu huấn luyện có ID = {{data[0]}}:</b>
-    </span>
+{% extends "base.html" %}
+{% block title%} Cập nhập dữ liệu huấn luyện{% endblock %}
+{% block content %}
+<main class="app-content">
+    </div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_data_train">Dữ liệu huấn luyện</a></li>
+            <li class="breadcrumb-item"><a href="">Cập nhập nhóm dữ liệu</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div>
-            <label class="control-label">Dữ liệu: </label>
-            <textarea title="text_original" name="text_original"
-                id="text_original">{{data[1]}}</textarea>
+            <div class="tile">
+
+                <h3 class="tile-title">Cập nhập dữ liệu huấn luyện</h3>
+                <div class="tile-body">
+
+                    <form class="row" method="post" action="/view_data_train/update_one_data_train/{{data[0]}}"
+                        enctype="multipart/form-data">
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Dữ liệu: </label>
+                            <textarea class="form-control" title="text_original" name="text_original"
+                                id="text_original">{{data[1]}}</textarea>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Loại nhãn: </label>
+                            <select class="form-control" id="class_id" name="class_id">
+                                {% if data[2] == 0 %}
+                                <option value="1">Spam</option>
+                                <option value="0" selected>Ham</option>
+                                {% else %}
+                                <option value="1" selected>Spam</option>
+                                <option value="0">Ham</option>
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="control-label">Chọn nhóm cho dữ liệu: </label>
+                            <br>
+                            {% for elm in group_name_list %}
+                            {% if elm[0] in id_dgroup_list_selected %}
+                            <input type="checkbox" name="{{elm[1]}}" value="{{elm[1]}}"
+                                id="{{elm[1]}}" checked>{{elm[1]}}</input><br>
+                            {% else %}
+                            <input type="checkbox" name="{{elm[1]}}" value="{{elm[1]}}"
+                                id="{{elm[1]}} ">{{elm[1]}}</input><br>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="form-group col-md-8"></div>
+
+
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Cập nhập" />
+                            <a class="btn btn-cancel" href="/view_data_train">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label>Loại nhãn: </label>
-            <select id="class_id" name="class_id">
-                {% if data[2] == 0 %}
-                <option value="1">Spam</option>
-                <option value="0" selected>Ham</option>
-                {% else %}
-                <option value="1" selected>Spam</option>
-                <option value="0">Ham</option>
-                {% endif %}
-            </select>
-        </div>
-
-        <div>
-            <label class="control-label">Chọn nhóm cho dữ liệu: </label>
-            <br>
-            {% for elm in group_name_list %}
-                {% if elm[0] in id_dgroup_list_selected %}
-                    <input type="checkbox" name="{{elm[1]}}" value="{{elm[1]}}" id="{{elm[1]}}" checked>{{elm[1]}}</input><br>
-                {% else %}
-                    <input type="checkbox" name="{{elm[1]}}" value="{{elm[1]}}" id="{{elm[1]}} ">{{elm[1]}}</input><br>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-
-        <div>
-            <input type="submit" value="Lưu" id="submit">
-        </div>
-</form>
+    </div>
+</main>
+{% endblock %}
