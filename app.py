@@ -1076,7 +1076,7 @@ def view_data_input():
 
     return render_template(session['role'] + "/view_data_input.html", data=records, userinfo=session['username'])
 
-@app.route("/view_distinct_data_input")
+@app.route("/view_data_input/view_distinct_data_input")
 def view_distinct_data_input():
     cur = mysql.connection.cursor()
     sql = """ 
@@ -1322,7 +1322,7 @@ def form_add_data_train():
         return redirect(url_for('form_add_data_train'))
     return render_template(session['role'] + "/form_add_data_train.html", userinfo=session['username'])
 
-@app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
+@app.route("/view_data_input/view_distinct_data_input/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def form_add_data_input_to_data_train(id_data_input):
     cur = mysql.connection.cursor()
     
