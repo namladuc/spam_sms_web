@@ -1,55 +1,150 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash">
-        {% for message in messages %}
-          <span>{{ message }}</span>
-        {% endfor %}
+{% extends "base.html" %}
+{% block title %} Dữ liệu huấn luyện{% endblock title %}
+{% block content %}
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+      <li class="breadcrumb-item"><a href="">Dữ liệu huấn luyện</a></li>
+    </ul>
+    <div id="clock"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
+
+          <div class="row element-button">
+            <div class="col-sm-2">
+              <a class="btn btn-add btn-sm" href="/view_data_train/form_add_data_train" title="Thêm mô hình"><i
+                  class="fas fa-plus"></i>
+                Thêm dữ liệu huấn luyện</a>
+            </div>
+            <div class="col-sm-2">
+              <a class="btn btn-delete btn-sm" type="button" title="Xóa tất cả các phần tử đã chọn"
+                onclick="deleteMoreRow(this)"><i class="fas fa-trash-alt"></i> Xóa phần tử đã chọn </a>
+            </div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash">
+              {% for message in messages %}
+              <span>{{ message }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+              id="sampleTable">
+              <thead>
+                <tr>
+                  <th width="10"><input type="checkbox" id="all"></th>
+                  <th>ID Data train</th>
+                  <th>Text</th>
+                  <th>Class ID</th>
+                  <th>Create at</th>
+                  <th>Create by</th>
+                  <th>Update at</th>
+                  <th>Update by</th>
+                  <th>Chức năng</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data %}
+                <tr>
+                  <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
+                  <td>{{ row[0] }}</td>
+                  <td>{{ row[1] }}</td>
+                  <td>{{ row[8] }}</td>
+                  <td>{{ row[3] }}</td>
+                  <td>{{ row[4] }}</td>
+                  <td>{{ row[5] }}</td>
+                  <td>{{ row[6] }}</td>
+                  <td class="table-td-center">
+                    <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
+                      onclick="editDataTrain('{{ row[0] }}')"><i class="fa fa-edit" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                      onclick="deleteDataTrain('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-  {% endif %}
-{% endwith %}
-
-<table>
-  <thead>
-    <tr>
-      <th>ID Data train</th>
-      <th>Text</th>
-      <th>Class ID</th>
-      <th>Create at</th>
-      <th>Create by</th>
-      <th>Update at</th>
-      <th>Update by</th>
-      <th>Chức năng</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in data %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[8] }}</td>
-      <td>{{ row[3] }}</td>
-      <td>{{ row[4] }}</td>
-      <td>{{ row[5] }}</td>
-      <td>{{ row[6] }}</td>
-      <td>
-        <button onclick="editDataTrain('{{ row[0] }}')">Sửa</button>
-        <button onclick="deleteDataTrain('{{ row[0] }}')">Xóa</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+  </div>
+</main>
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!-- Page specific javascripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<!-- Data table plugin-->
+<!-- <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/jquery.dataTables.min.js')}}"></script>
+<!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
 <script>
   function editDataTrain(id_dtrain) {
-    window.location.href = `/update_one_data_train/${id_dtrain}`;
+    window.location.href = `/view_data_train/update_one_data_train/${id_dtrain}`;
   }
 
   function deleteDataTrain(id_dtrain) {
-    window.location.href = `/delete_one_data_train/${id_dtrain}`;
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa dữ liệu này?",
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href = `/delete_one_data_train/${id_dtrain}`;
+      }
+    });
+  }
+  function deleteMoreRow(r) {
+    var numRow = document.getElementById("sampleTable").rows.length;
+    var id_dtrain = [];
+    $('#sampleTable tbody :checkbox').each(function () {
+      let i = this.parentNode.parentNode.rowIndex;
+      if (this.checked) {
+        id_dtrain.push(this.parentNode.parentNode.childNodes[3].textContent);
+      }
+    });
+
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa những dữ liệu này?", // index = 3
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          for (let i = 0; i < id_dtrain.length; i++) {
+            $.ajax({
+              url: "/delete_one_data_train/" + id_dtrain[i],
+              context: document.body
+            })
+          }
+          swal("Đã xóa thành công.!", {});
+        }
+        location.reload();
+      });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     document.querySelector('.flash').style.display = 'none';
   }, 3000);
+  oTable = $('#sampleTable').dataTable();
+  $('#all').click(function (e) {
+    $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
+    e.stopImmediatePropagation();
+  });
 </script>
+{% endblock content %}
