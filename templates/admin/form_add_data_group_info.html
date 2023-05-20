@@ -1,37 +1,61 @@
-<form method="post" action="/form_add_data_group_info" enctype ="multipart/form-data">
-    <span >
-        <b>Thêm thông tin nhóm dữ liệu</b>
-    </span>
+{% extends "base.html" %}
+{% block title%} Thêm nhóm dữ liệu {% endblock %}
+{% block content %}
+<main class="app-content">
+    </div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_data_group_info">Nhóm dữ liệu</a></li>
+            <li class="breadcrumb-item"><a href="">Thêm nhóm dữ liệu</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-    <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
-        <div>
-            {% if err_code %}
-            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
-              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-              <strong>{{ err_code }}</strong> 
+            <div class="tile">
+
+                <h3 class="tile-title">Thêm trạng thái Mô hình</h3>
+                <div class="tile-body">
+                    <form class="row" method="post" action="/view_data_group_info/form_add_data_group_info" enctype="multipart/form-data">
+
+                        <!--=====FORM INPUT TÀI KHOẢN VÀ PASSWORD======-->
+                        <div>
+                            {% if err_code %}
+                            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>{{ err_code }}</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Upload TFIDF file</label>
+                            <input class="form-control" type="file" style="height:45px;" id="FileTFIDFUpload"
+                                name="FileTFIDFUpload" class="form-control" id="customFile" />
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Tên nhóm</label>
+                            <input class="form-control" type="text" title="group_name" name="group_name"
+                                id="group_name" required>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Test size</label>
+                            <input class="form-control" type="text" title="Test size" name="test_size" id="test_size"
+                                pattern="[+-]?([0-9]*[.])?[0-9]+" required>
+                        </div>
+
+                        <!--=====ĐĂNG NHẬP======-->
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Thêm" />
+                            <a class="btn btn-cancel" href="/view_data_group_info">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endif %}
         </div>
-
-        <div>
-            <label class="control-label">Upload TFIDF file</label>
-            <input type="file" style="height:45px;" id="FileTFIDFUpload" name="FileTFIDFUpload" class="form-control" id="customFile" />
-        </div>
-
-        <div>
-            <label class="control-label">Tên nhóm</label>
-            <input type="text" title="group_name" name="group_name"
-                id="group_name">
-        </div>
-
-        <div>
-            <label class="control-label">Test size</label>
-            <input type="text" title="Test size" name="test_size"
-                id="test_size" pattern="[+-]?([0-9]*[.])?[0-9]+">
-        </div>
-
-        <!--=====ĐĂNG NHẬP======-->
-        <div>
-            <input type="submit" value="Lưu" id="submit" />
-        </div>
-</form>
+    </div>
+</main>
+{% endblock %}

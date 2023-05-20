@@ -1,20 +1,43 @@
-<form method="post" action="/update_one_group_info/{{ data[0] }}" enctype ="multipart/form-data">
-    <span >
-        <b>Sửa thông tin nhóm dữ liệu:</b>
-    </span>
-        <div>
-            <label class="control-label">Tên nhóm: </label>
-            <input type="text" title="group_name" name="group_name"
-                id="group_name" value="{{ data[1] }}">
-        </div>
+{% extends "base.html" %}
+{% block title%} Cập nhập nhóm dữ liệu {% endblock %}
+{% block content %}
+<main class="app-content">
+    </div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="/view_data_group_info">Nhóm dữ liệu</a></li>
+            <li class="breadcrumb-item"><a href="">Cập nhập nhóm dữ liệu</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div>
-            <label>Kích thước tập test: </label>
-            <input type="text" title="test_size" name="test_size"
-                id="test_size" value="{{ data[3] }}">
-        </div>
+            <div class="tile">
 
-        <div>
-            <input type="submit" value="Lưu" id="submit">
+                <h3 class="tile-title">Cập nhập nhóm dữ liệu</h3>
+                <div class="tile-body">
+                    <form class="row" method="post" action="/view_data_group_info/update_one_group_info/{{ data[0] }}"
+                        enctype="multipart/form-data">
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Tên nhóm: </label>
+                            <input class="form-control" type="text" title="group_name" name="group_name" id="group_name"
+                                value="{{ data[1] }}">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Kích thước tập test: </label>
+                            <input class="form-control" type="text" title="test_size" name="test_size" id="test_size"
+                                value="{{ data[3] }}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Cập nhập" />
+                            <a class="btn btn-cancel" href="/view_data_group_info">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-</form>
+    </div>
+</main>
+{% endblock %}

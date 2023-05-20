@@ -1,78 +1,223 @@
-Model info
-<br>
-Model name: {{model_info[1]}}
-<br>
-Model class: {{model_info[2]}}
-<br>
-Description: {{model_info[3]}}
+{% extends "base.html" %}
+{% block title %} Trạng thái mô hình {% endblock title %}
+{% block content %}
 
-<br><br>
-
-Data Group Infomation
-<br>
-Group data name: {{group_data_name}}
-<br>
-Test size: {{test_size}}
-<br><br>
-
-The measures in the training set:
-<br>
-Accuracy: {{train_info[0]}}
-<br>
-Precision: {{train_info[1]}}
-<br>
-Recall: {{train_info[2]}}
-<br>
-R2-Score: {{train_info[3]}}
-<br>
-F1-Score: {{train_info[4]}}
-<br>
-<table>
-    <tr>
-      <td></td>
-      <td>Predicted Positive</td>
-      <td>Predicted Negative</td>
-    </tr>
-    <tr>
-      <td>Actual Positive</td>
-      <td>{{train_info[5][0]}}</td>
-      <td>{{train_info[5][1]}}</td>
-    </tr>
-    <tr>
-      <td>Actual Negative</td>
-      <td>{{train_info[5][2]}}</td>
-      <td>{{train_info[5][3]}}</td>
-    </tr>
-  </table>
-<br><br>
-
-The measures in the testing set:
-<br>
-Accuracy: {{test_info[0]}}
-<br>
-Precision: {{test_info[1]}}
-<br>
-Recall: {{test_info[2]}}
-<br>
-R2-Score: {{test_info[3]}}
-<br>
-F1-Score: {{test_info[4]}}
-<br>
-<table>
-    <tr>
-      <td></td>
-      <td>Predicted Positive</td>
-      <td>Predicted Negative</td>
-    </tr>
-    <tr>
-      <td>Actual Positive</td>
-      <td>{{test_info[5][0]}}</td>
-      <td>{{test_info[5][1]}}</td>
-    </tr>
-    <tr>
-      <td>Actual Negative</td>
-      <td>{{test_info[5][2]}}</td>
-      <td>{{test_info[5][3]}}</td>
-    </tr>
-  </table>
-<br><br>
+<main class="app-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><a href="/view_model_info">Mô hình</a></li>
+          <li class="breadcrumb-item"><a href="/view_model_info/view_model_train_state">Trạng thái mô hình</a></li>
+          <li class="breadcrumb-item"><a href="">Xem trạng thái mô hình</a></li>
+        </ul>
+        <div id="clock"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!--Left-->
+    <div class="col-md-12 col-lg-6">
+      <div class="row">
+        <!-- col-6 -->
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Thông tin mô hình</h3>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Tên mô hình</h4>
+                <p><b>{{model_info[1]}}</b></p>
+              </div>
+            </div>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Lớp mô hình</h4>
+                <p><b>{{model_info[2]}}</b></p>
+              </div>
+            </div>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Miêu tả</h4>
+                <p><b>{{model_info[3]}}</b></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ------ -->
+        <div class="col-md-12">
+          <div class="row">
+            <!-- col-6 -->
+            <div class="col-md-12">
+              <div class="tile">
+                <h3 class="tile-title">Các độ đo trong tập huấn luyện</h3>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>Accuracy</h4>
+                    <p><b>{{train_info[0]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4> Precision</h4>
+                    <p><b>{{train_info[1]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>Recall</h4>
+                    <p><b>{{train_info[2]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>R2-Score</h4>
+                    <p><b>{{train_info[3]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>F1-Scoree</h4>
+                    <p><b>{{train_info[4]}}</b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ---- -->
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <!-- col-6 -->
+            <div class="col-md-12">
+              <div class="tile">
+                <h3 class="tile-title">Tập huấn luyện</h3>
+                <table style="border-collapse: collapse; width: 100%; max-width: 800px; margin: 0 auto;">
+                  <tr>
+                    <th
+                      style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;">
+                    </th>
+                    <th
+                      style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;">
+                      Predicted Positive</th>
+                    <th
+                      style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;">
+                      Predicted Negative</th>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">Actual Positive</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{train_info[5][0]}}</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{train_info[5][1]}}</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">Actual Negative</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{train_info[5][2]}}</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{train_info[5][3]}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--END left-->
+    <!--Right-->
+    <div class="col-md-12 col-lg-6">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <h3 class="tile-title">Thông tin nhóm dữ liệu</h3>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Tên nhóm dữ liệu</h4>
+                <p><b>{{model_info[1]}}</b></p>
+              </div>
+            </div>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Kích thước tập kiểm thử</h4>
+                <p><b>{{test_size}}</b></p>
+              </div>
+            </div>
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>&nbsp&nbsp&nbsp&nbsp&nbsp</h4>
+                <p><b>&nbsp&nbsp&nbsp&nbsp&nbsp</b></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <!-- col-6 -->
+            <div class="col-md-12">
+              <div class="tile">
+                <h3 class="tile-title">Các độ đo trong tập kiểm thử</h3>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>Accuracy</h4>
+                    <p><b>{{test_info[0]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4> Precision</h4>
+                    <p><b>{{test_info[1]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>Recall</h4>
+                    <p><b>{{test_info[2]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>R2-Score</h4>
+                    <p><b>{{test_info[3]}}</b></p>
+                  </div>
+                </div>
+                <div class="widget-small primary coloured-icon">
+                  <div class="info">
+                    <h4>F1-Scoree</h4>
+                    <p><b>{{test_info[4]}}</b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ---- -->
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <!-- col-6 -->
+            <div class="col-md-12">
+              <div class="tile">
+                <h3 class="tile-title">Tập kiểm thử</h3>
+                <table style="border-collapse: collapse; width: 100%; max-width: 800px; margin: 0 auto;">
+                  <tr>
+                    <th style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;"></th>
+                    <th style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;">Predicted Positive</th>
+                    <th style="background-color: #f2f2f2; font-weight: bold; color: #444; text-align: center; padding: 10px; border: 1px solid #ddd;">Predicted Negative</th>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">Actual Positive</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{test_info[5][0]}}</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{test_info[5][1]}}</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 10px; border: 1px solid #ddd;">Actual Negative</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{test_info[5][2]}}</td>
+                    <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">{{test_info[5][3]}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ----- -->
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}

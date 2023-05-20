@@ -1,67 +1,197 @@
-Số bản ghi trong nhóm dữ liệu {{group_info[1]}} là {{num_rows}}
+{% extends "base.html" %}
+{% block title %} Xem nhóm dữ liệu {% endblock title %}
+{% block content %}
 
-<div id='chart_pie' class='chart_pie'
- style="height: 400px; width: 50%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
+<main class="app-content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+          <li class="breadcrumb-item"><a href="/view_data_group_info">Nhóm dữ liệu</a></li>
+          <li class="breadcrumb-item"><a href="">Xem nhóm dữ liệu</a></li>
+        </ul>
+        <div id="clock"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <!--Left-->
+    <div class="col-md-12">
+      <div class="row">
+        <!-- col-6 -->
+        <div class="col-md-6">
+          <div class="widget-small primary coloured-icon"><i class='icon bx bxs-info-square fa-3x'></i>
+            <div class="info">
+              <h4>Số bản ghi trong nhóm dữ liệu {{group_info[1]}} là</h4>
+              <p><b>{{num_rows}}</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <!-- col-12 -->
+          <div class="col-md-12">
+            <div class="tile">
+              <h3 class="tile-title">Biểu đồ</h3>
+              <div>
+                <div class="embed-responsive embed-responsive-16by9">
+                  <div id='chart_pie' class='embed-responsive-item' style="height: 650px; width: 100%;
+                  box-shadow: 5px 5px 5px #888888;">
+                  </div>
+                </div>
+              </div>
 
-<br>
 
-<div id='chart_distribution' class='chart_distribution'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <!-- col-12 -->
+              <div class="col-md-12">
+                <div class="tile">
+                  <h3 class="tile-title">Biểu đồ</h3>
+                  <div>
+                    <div class="embed-responsive embed-responsive-16by9">
+                      <div id='chart_distribution' class='embed-responsive-item' style="height: 650px; width: 100%;
+                    box-shadow: 5px 5px 5px #888888;">
+                      </div>
+                    </div>
+                  </div>
 
-<br>
 
-<div id='graphs_15_spam' class='graphs_15_spam'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                  <!-- col-12 -->
+                  <div class="col-md-12">
+                    <div class="tile">
+                      <h3 class="tile-title">Biểu đồ</h3>
+                      <div>
+                        <div class="embed-responsive embed-responsive-16by9">
+                          <div id='graphs_15_spam' class='embed-responsive-item' style="height: 650px; width: 100%;
+                      box-shadow: 5px 5px 5px #888888;">
+                          </div>
+                        </div>
+                      </div>
 
-<br>
-
-<div id='graphs_15_ham' class='graphs_15_ham'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
-
-<br>
-
-<div id='graphs_acc_train' class='graphs_acc_train'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
-
-<br>
-
-<div id='graphs_acc_test' class='graphs_acc_test'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
-
-<br>
-
-<div id='graphs_time_train' class='graphs_time_train'
- style="height: 100%; width: 100%; border: 1px solid; 
-box-shadow: 5px 5px 5px #888888;"></div>
-
-<br>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="row">
+                      <!-- col-12 -->
+                      <div class="col-md-12">
+                        <div class="tile">
+                          <h3 class="tile-title">Biểu đồ</h3>
+                          <div>
+                            <div class="embed-responsive embed-responsive-16by9">
+                              <div id='graphs_15_ham' class='embed-responsive-item' style="height: 650px; width: 100%;
+                        box-shadow: 5px 5px 5px #888888;">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="row">
+                          <!-- col-12 -->
+                          <div class="col-md-12">
+                            <div class="tile">
+                              <h3 class="tile-title">Biểu đồ</h3>
+                              <div>
+                                <div class="embed-responsive embed-responsive-16by9">
+                                  <div id='graphs_acc_train' class='embed-responsive-item' style="height: 650px; width: 100%;
+                            box-shadow: 5px 5px 5px #888888;">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="row">
+                              <!-- col-12 -->
+                              <div class="col-md-12">
+                                <div class="tile">
+                                  <h3 class="tile-title">Biểu đồ</h3>
+                                  <div>
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                      <div id='graphs_acc_test' class='embed-responsive-item' style="height: 650px; width: 100%;
+                                box-shadow: 5px 5px 5px #888888;">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="row">
+                                  <!-- col-12 -->
+                                  <div class="col-md-12">
+                                    <div class="tile">
+                                      <h3 class="tile-title">Biểu đồ</h3>
+                                      <div>
+                                        <div class="embed-responsive embed-responsive-16by9">
+                                          <div id='graphs_time_train' class='embed-responsive-item' style="height: 650px; width: 100%;
+                                    box-shadow: 5px 5px 5px #888888;">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
 
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 <script type='text/javascript'>
-    var graphs = {{graphJSON_pie | safe}};
-    Plotly.plot('chart_pie',graphs,{});
+  var graphs = {{ graphJSON_pie | safe}};
+  Plotly.plot('chart_pie', graphs, {});
 
-    var graphs_1 = {{graphJSON_distribution | safe}};
-    Plotly.plot('chart_distribution',graphs_1,{});
+  var graphs_1 = {{ graphJSON_distribution | safe}};
+  Plotly.plot('chart_distribution', graphs_1, {});
 
-    // graphJSON_15_count_spam
-    var graphs_15_spam = {{graphJSON_15_count_spam | safe}};
-    Plotly.plot('graphs_15_spam',graphs_15_spam,{});
-    var graphs_15_ham = {{graphJSON_15_count_ham | safe}};
-    Plotly.plot('graphs_15_ham',graphs_15_ham,{});
+  // graphJSON_15_count_spam
+  var graphs_15_spam = {{ graphJSON_15_count_spam | safe}};
+  Plotly.plot('graphs_15_spam', graphs_15_spam, {});
+  var graphs_15_ham = {{ graphJSON_15_count_ham | safe}};
+  Plotly.plot('graphs_15_ham', graphs_15_ham, {});
 
-    // graph acc 
-    var graphs_acc_train = {{graphJSON_acc_train | safe}};
-    Plotly.plot('graphs_acc_train',graphs_acc_train,{});
-    var graphs_acc_test = {{graphJSON_acc_test | safe}};
-    Plotly.plot('graphs_acc_test',graphs_acc_test,{});
-    var graphs_time_train = {{graphJSON_time_train | safe}};
-    Plotly.plot('graphs_time_train',graphs_time_train,{});
-  </script></html>
+  // graph acc 
+  var graphs_acc_train = {{ graphJSON_acc_train | safe}};
+  Plotly.plot('graphs_acc_train', graphs_acc_train, {});
+  var graphs_acc_test = {{ graphJSON_acc_test | safe}};
+  Plotly.plot('graphs_acc_test', graphs_acc_test, {});
+  var graphs_time_train = {{ graphJSON_time_train | safe}};
+  Plotly.plot('graphs_time_train', graphs_time_train, {});
+</script>
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
+<!--===============================================================================================-->
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!--===============================================================================================-->
+<script src="{{url_for('static', filename='doc/js/plugins/chart.js')}}"></script>
+<!--===============================================================================================-->
+
+</html>
+{% endblock content %}

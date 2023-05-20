@@ -120,26 +120,10 @@
     });
   }
   function editModel_state(id_train) {
-    swal({
-      title: "Cảnh báo",
-      text: "Bạn có chắc chắn là muốn sửa mô hình này?",
-      buttons: ["Hủy bỏ", "Đồng ý"],
-    }).then((willEdit) => {
-      if (willEdit) {
-        window.location.href = `/view_model_info/view_model_train_state/update_one_model_train_state/${id_train}`;
-      }
-    });
+    window.location.href = `/view_model_info/view_model_train_state/update_one_model_train_state/${id_train}`;
   }
   function viewModel_state(id_train) {
-    swal({
-      title: "Cảnh báo",
-      text: "Bạn có chắc chắn là muốn xem trạng thái đào tạo cho mô hình này?",
-      buttons: ["Hủy bỏ", "Đồng ý"],
-    }).then((willView) => {
-      if (willView) {
-        window.location.href = `/view_one_model_train_state/${id_train}`;
-      }
-    });
+    window.location.href = `/view_model_info/view_model_train_state/view_one_model_train_state/${id_train}`;
   }
 
   function deleteMoreRow(r) {
