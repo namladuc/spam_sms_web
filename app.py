@@ -1124,7 +1124,7 @@ def view_account():
 
     return render_template(session['role'] + "/view_account.html", data=accounts, userinfo=session['username'])
 
-@app.route("/form_add_account", methods=['GET','POST'])
+@app.route("/view_account/form_add_account", methods=['GET','POST'])
 def form_add_account():
     cur = mysql.connection.cursor()
     sql = """
@@ -1170,7 +1170,7 @@ def form_add_account():
 
     return render_template(session['role'] + '/form_add_account.html', list_role=list_role, userinfo=session['username'])
 
-@app.route("/update_one_account/<int:id_user>", methods=['GET','POST'])
+@app.route("/view_account/update_one_account/<int:id_user>", methods=['GET','POST'])
 def update_one_account(id_user):
     cur = mysql.connection.cursor()
     sql = """
