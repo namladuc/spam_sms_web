@@ -250,7 +250,7 @@ def home():
                            graphJSON_day_input = graphJSON_day_input,
                            userinfo = session['username'])
 
-@app.route("/form_add_data_group_info", methods=['GET','POST'])
+@app.route("/view_data_group_info/form_add_data_group_info", methods=['GET','POST'])
 def form_add_data_group_info():
     cur = mysql.connection.cursor()
     
@@ -527,7 +527,7 @@ def view_data_group_info():
 
     return render_template(session['role'] + "/view_data_group_info.html", data=dgroup_infos, userinfo=session['username'])
 
-@app.route("/update_one_group_info/<int:id_dgroup>", methods=['GET','POST'])
+@app.route("/view_data_group_info/update_one_group_info/<int:id_dgroup>", methods=['GET','POST'])
 def update_one_group_info(id_dgroup):
     cur = mysql.connection.cursor()
     sql = """
@@ -581,7 +581,7 @@ def delete_one_group_info(id_dgroup):
     cur.close()
     return redirect(url_for("view_data_group_info"))
 
-@app.route("/view_one_group_info/<string:id_dgroup>", methods=['GET','POST'])
+@app.route("/view_data_group_info/view_one_group_info/<string:id_dgroup>", methods=['GET','POST'])
 def view_one_group_info(id_dgroup):
     # pie chart: %ham, %spam
     # bar plot: word frequency for ham and spam label
@@ -983,7 +983,7 @@ def delete_one_model_train_state(id_train):
     cur.close()
     return redirect(url_for("view_model_train_state"))
 
-@app.route("/view_one_model_train_state/<string:id_train>", methods=['GET','POST'])
+@app.route("/view_model_info/view_model_train_state/view_one_model_train_state/<string:id_train>", methods=['GET','POST'])
 def view_one_model_train_state(id_train):
     cur = mysql.connection.cursor()
     
