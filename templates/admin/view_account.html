@@ -29,103 +29,54 @@
 
 
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash">
-        {% for message in messages %}
-          <span>{{ message }}</span>
-        {% endfor %}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash">
+              {% for message in messages %}
+              <span>{{ message }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+              id="sampleTable">
+              <thead>
+                <tr>
+                  <th width="10"><input type="checkbox" id="all"></th>
+                  <th>ID user</th>
+                  <th>Full name</th>
+                  <th>username</th>
+                  <th>Role</th>
+                  <th>Chức năng</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data %}
+                <tr>
+                  <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
+                  <td>{{ row[0] }}</td>
+                  <td>{{ row[1] }}</td>
+                  <td>{{ row[2] }}</td>
+                  <td>{{ row[7] }}</td>
+                  <td class="table-td-center">
+                    <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
+                      onclick="editAccount('{{ row[0] }}')"><i class="fa fa-edit" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                      onclick="deleteAccount('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-  {% endif %}
-{% endwith %}
-
-<table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
-id="sampleTable">
-  <thead>
-    <tr>
-      <th width="10"><input type="checkbox" id="all"></th>
-      <th>ID user</th>
-      <th>Full name</th>
-      <th>username</th>
-      <th>Role</th>
-      <th>Chức năng</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in data %}
-    <tr>
-      <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ row[7] }}</td>
-      <td class="table-td-center">
-        <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
-        onclick="editAccount('{{ row[0] }}')"><i class="fa fa-edit" aria-hidden="true"></i>
-      </button>
-        <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-          onclick="deleteAccount('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
-        </button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<script>
-  function editAccount(id_user) {
-    window.location.href = `/view_account/update_one_account/${id_user}`;
-  }
-
-  function deleteAccount(id_user) {
-    swal({
-      title: "Cảnh báo",
-      text: "Bạn có chắc chắn là muốn xóa tài khoản này?",
-      buttons: ["Hủy bỏ", "Đồng ý"],
-    }).then((willDelete) => {
-      if (willDelete) {
-    window.location.href = `/delete_one_account/${id_user}`;
-  }
-});
-}
-function deleteMoreRow(r) {
-  var numRow = document.getElementById("sampleTable").rows.length;
-  var id_user = [];
-  $('#sampleTable tbody :checkbox').each(function () {
-      let i = this.parentNode.parentNode.rowIndex;
-      if (this.checked) {
-        id_user.push(this.parentNode.parentNode.childNodes[3].textContent);
-      }
-  });
-
-  swal({
-    title: "Cảnh báo",
-    text: "Bạn có chắc chắn là muốn xóa những tài khoản này?", // index = 3
-    buttons: ["Hủy bỏ", "Đồng ý"],
-  })
-    .then((willDelete) => {
-      if (willDelete) {
-        for (let i = 0; i < id_user.length; i++) {
-          $.ajax({
-            url:"/delete_one_account/" + id_user[i],
-            context: document.body
-          })
-        }
-        swal("Đã xóa thành công.!", {});
-      }
-      location.reload();
-    });
-}
-
-  setTimeout(function() {
-    document.querySelector('.flash').style.display = 'none';
-  }, 3000);
-  oTable = $('#sampleTable').dataTable();
-  $('#all').click(function (e) {
-    $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
-    e.stopImmediatePropagation();
-  });
-</script>
+  </div>
+</main>
 <script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
 <script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
 <script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
@@ -141,4 +92,60 @@ function deleteMoreRow(r) {
 <!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
 <script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
 <script type="text/javascript">$('#sampleTable').DataTable();</script>
+
+
+<script>
+  function editAccount(id_user) {
+    window.location.href = `/view_account/update_one_account/${id_user}`;
+  }
+
+  function deleteAccount(id_user) {
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa tài khoản này?",
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    }).then((willDelete) => {
+      if (willDelete) {
+        window.location.href = `/delete_one_account/${id_user}`;
+      }
+    });
+  }
+  function deleteMoreRow(r) {
+    var numRow = document.getElementById("sampleTable").rows.length;
+    var id_user = [];
+    $('#sampleTable tbody :checkbox').each(function () {
+      let i = this.parentNode.parentNode.rowIndex;
+      if (this.checked) {
+        id_user.push(this.parentNode.parentNode.childNodes[3].textContent);
+      }
+    });
+
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa những tài khoản này?", // index = 3
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          for (let i = 0; i < id_user.length; i++) {
+            $.ajax({
+              url: "/delete_one_account/" + id_user[i],
+              context: document.body
+            })
+          }
+          swal("Đã xóa thành công.!", {});
+        }
+        location.reload();
+      });
+  }
+
+  setTimeout(function () {
+    document.querySelector('.flash').style.display = 'none';
+  }, 3000);
+  oTable = $('#sampleTable').dataTable();
+  $('#all').click(function (e) {
+    $('#sampleTable tbody :checkbox').prop('checked', $(this).is(':checked'));
+    e.stopImmediatePropagation();
+  });
+</script>
 {% endblock content %}
