@@ -37,23 +37,26 @@
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-        <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="{{ url_for('static', filename='images/anh.jpg') }}" style="border-radius: 50%;"
-            width="50px" alt="User Image">
-        <div>
-            <p class="app-sidebar__user-name"><b>{{userinfo[1]}}</b></p>
-            <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
-        </div>
-        <hr>
-        <ul class="app-menu">
-            <li><a class="app-menu__item haha" href="/home"><i class='app-menu__icon bx bx-user'></i>
-                    <span class="app-menu__label">Trang chủ</span></a></li>
-            <li><a class="app-menu__item" href="/view_model_info"><i class='app-menu__icon bx bx-cube'></i><span
-                        class="app-menu__label">Mô hình</span></a></li>
-            <li><a class="app-menu__item" href="/du_leu"><i class='app-menu__icon bx bxs-data'></i><span
-                        class="app-menu__label">Dữ liệu</span></a></li>
-            <li><a class="app-menu__item" href="/cai_dat"><i class='app-menu__icon bx bx-cog'></i><span
-                        class="app-menu__label">Cài đặt</span></a></li>
-        </ul>
+        <div class="app-sidebar__user"><img class="app-sidebar__user-avatar"
+                src="{{ url_for('static', filename='images/anh.jpg') }}" style="border-radius: 50%;" width="50px"
+                alt="User Image">
+            <div>
+                <p class="app-sidebar__user-name"><b>{{userinfo[1]}}</b></p>
+                <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
+            </div>
+            <hr>
+            <ul class="app-menu">
+                <li><a class="app-menu__item haha" href="/home"><i class='app-menu__icon bx bx-user'></i>
+                        <span class="app-menu__label">Trang chủ</span></a></li>
+                <li><a class="app-menu__item" href="/view_model_info"><i class='app-menu__icon bx bx-cube'></i><span
+                            class="app-menu__label">Mô hình</span></a></li>
+                <li><a class="app-menu__item" href="/du_leu"><i class='app-menu__icon bx bxs-data'></i><span
+                            class="app-menu__label">Dữ liệu</span></a></li>
+                <li><a class="app-menu__item" href="/view_data_group_info"><i class='app-menu__icon bx bxs-data'></i><span
+                            class="app-menu__label">Nhóm dữ liệu</span></a></li>
+                <li><a class="app-menu__item" href="/cai_dat"><i class='app-menu__icon bx bx-cog'></i><span
+                            class="app-menu__label">Cài đặt</span></a></li>
+            </ul>
     </aside>
     {% block content %}{% endblock content %}
     <script src="{{url_for('static', filename='js/displaytime/displaytime.js')}}"></script>
