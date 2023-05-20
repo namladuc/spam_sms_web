@@ -27,7 +27,6 @@
       <td>{{ row[3] }}</td>
       <td>
         <button onclick="addDataInput('{{ row[0] }}')">Thêm vào dữ liệu huấn luyện</button>
-        <button onclick="deleteDistinctDataInput('{{ row[1] }}', '{{ row[2] }}')">Xóa</button>
       </td>
     </tr>
     {% endfor %}
@@ -37,10 +36,6 @@
 <script>
   function addDataInput(id_input_data) {
     window.location.href = `/form_add_data_input_to_data_train/${id_input_data}`;
-  }
-
-  function deleteDistinctDataInput(id_user, original_text) {
-    window.location.href = `/delete_one_distinct_data_input/${id_user}&${original_text}`;
   }
 
   setTimeout(function() {

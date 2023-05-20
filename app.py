@@ -157,6 +157,9 @@ def register_account():
 
 @app.route("/home", methods=['GET','POST'])
 def home():
+    if session['role_id'] != 1:
+        return render_template(session['role'] + '/home.html', userinfo=session['username'])
+
     cur = mysql.connection.cursor()
     
     # info about num of group data
@@ -1085,13 +1088,13 @@ def view_distinct_data_input():
     records = cur.fetchall()
     return render_template(session['role'] + "/view_distinct_data_input.html", data=records, userinfo=session['username'])
 
-@app.route("/delete_one_distinct_data_input/<int:id_user>&<string:original_text>", methods=['GET','POST'])
-def delete_one_distinct_data_input(id_user, original_text):
+@app.route("/delete_one_data_input/<int:id_data_input>", methods=['GET','POST'])
+def delete_one_data_input(id_data_input):
     cur = mysql.connection.cursor()
     sql = """
-            SELECT * FROM data_input WHERE data_input.id_user = %s and data_input.original_text = %s;
+            SELECT * FROM data_input WHERE data_input.id = %s;
         """
-    cur.execute(sql, (id_user, original_text))
+    cur.execute(sql, (id_data_input, ))
     records = cur.fetchall()
 
     if len(records) == 0:
@@ -1099,14 +1102,14 @@ def delete_one_distinct_data_input(id_user, original_text):
 
     sql_delete_input_data = """
                        DELETE FROM data_input
-                       WHERE data_input.id_user = %s and data_input.original_text = %s;
+                       WHERE data_input.id = %s;
                      """
-    cur.execute(sql_delete_input_data, (id_user, original_text))
+    cur.execute(sql_delete_input_data, (id_data_input, ))
 
     mysql.connection.commit()
-    flash("Đã xóa thành công văn bản nhập vào : " + str(original_text) + "của User có ID :" + str(id_user))
+    flash("Đã xóa thành công Input data có ID :" + str(id_data_input))
     cur.close()
-    return redirect(url_for("view_distinct_data_input"))
+    return redirect(url_for("view_data_input"))
 
 @app.route("/view_account", methods=['GET','POST'])
 def view_account():
