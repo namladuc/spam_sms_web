@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %} Trạng thái mô hình {% endblock title %}
 {% block content %}
+
 <main class="app-content">
   <div class="app-title">
     <ul class="app-breadcrumb breadcrumb side">
@@ -27,6 +28,17 @@
                 onclick="deleteMoreRow(this)"><i class="fas fa-trash-alt"></i> Xóa phần tử đã chọn </a>
             </div>
           </div>
+
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="flash">
+              {% for message in messages %}
+                <span>{{ message }}</span>
+              {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+
           <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
             id="sampleTable">
             <thead>
@@ -51,7 +63,13 @@
                 <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
                 <td>{{ row[0] }}</td>
                 <td>{{ row[1] }}</td>
-                <td>{{ row[3] }}</td>
+                <td class="text-center">
+                {% if row[3] == 1 %}
+                    <span><i class="fa fa-check-circle" aria-hidden="true" style="color: green;"></i></span>
+                {% else %}
+                    <span><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></span>
+                {% endif %}
+                </td>
                 <td>{{ row[4] }}</td>
                 <td>{{ row[5] }}</td>
                 <td>{{ row[6] }}</td>
@@ -79,17 +97,6 @@
     </div>
   </div>
 </main>
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class="flash">
-  <ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
-{% endwith %}
 
 <!-- Essential javascripts for application to work-->
 <script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
