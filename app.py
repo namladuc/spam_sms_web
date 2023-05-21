@@ -398,7 +398,7 @@ def view_data_train():
     return render_template(session['role'] + "/view_data_train.html", data=dtrain, userinfo = session['username'])
 
 
-@app.route("/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
+@app.route("/view_data_train/update_one_data_train/<int:id_dtrain>", methods=['GET', 'POST'])
 def update_one_data_train(id_dtrain):
     cur = mysql.connection.cursor()
     sql = """
@@ -1076,7 +1076,7 @@ def view_data_input():
 
     return render_template(session['role'] + "/view_data_input.html", data=records, userinfo=session['username'])
 
-@app.route("/view_distinct_data_input")
+@app.route("/view_data_input/view_distinct_data_input")
 def view_distinct_data_input():
     cur = mysql.connection.cursor()
     sql = """ 
@@ -1124,7 +1124,7 @@ def view_account():
 
     return render_template(session['role'] + "/view_account.html", data=accounts, userinfo=session['username'])
 
-@app.route("/form_add_account", methods=['GET','POST'])
+@app.route("/view_account/form_add_account", methods=['GET','POST'])
 def form_add_account():
     cur = mysql.connection.cursor()
     sql = """
@@ -1170,7 +1170,7 @@ def form_add_account():
 
     return render_template(session['role'] + '/form_add_account.html', list_role=list_role, userinfo=session['username'])
 
-@app.route("/update_one_account/<int:id_user>", methods=['GET','POST'])
+@app.route("/view_account/update_one_account/<int:id_user>", methods=['GET','POST'])
 def update_one_account(id_user):
     cur = mysql.connection.cursor()
     sql = """
@@ -1243,7 +1243,7 @@ def delete_one_account(id_user):
     return redirect(url_for("view_account"))
 
 
-@app.route("/form_add_data_train", methods=['GET','POST'])
+@app.route("/view_data_train/form_add_data_train", methods=['GET','POST'])
 def form_add_data_train():
     cur = mysql.connection.cursor()
     
@@ -1322,7 +1322,7 @@ def form_add_data_train():
         return redirect(url_for('form_add_data_train'))
     return render_template(session['role'] + "/form_add_data_train.html", userinfo=session['username'])
 
-@app.route("/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
+@app.route("/view_data_input/view_distinct_data_input/form_add_data_input_to_data_train/<string:id_data_input>", methods=['GET','POST'])
 def form_add_data_input_to_data_train(id_data_input):
     cur = mysql.connection.cursor()
     
