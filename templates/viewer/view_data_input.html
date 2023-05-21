@@ -1,50 +1,97 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="flash">
-        {% for message in messages %}
-          <span>{{ message }}</span>
-        {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
+{% extends "baseviewer.html" %}
+{% block title %} Dữ liệu đầu vào {% endblock title %}
+{% block content %}
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb side">
+      <li class="breadcrumb-item"><a href="">Dữ liệu đầu vào</a></li>
+    </ul>
+    <div id="clock"></div>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>ID data input</th>
-      <th>ID user</th>
-      <th>Văn bản gốc</th>
-      <th>Tạo lúc</th>
-      <th>Tạo bởi</th>
-      <th>Cập nhật lúc</th>
-      <th>Cập nhật bởi</th>
-      <th>Chức năng</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in data %}
-    <tr>
-      <td>{{ row[0] }}</td>
-      <td>{{ row[1] }}</td>
-      <td>{{ row[2] }}</td>
-      <td>{{ row[3] }}</td>
-      <td>{{ row[4] }}</td>
-      <td>{{ row[5] }}</td>
-      <td>{{ row[6] }}</td>
-      <td>
-        <button onclick="deleteDataInput('{{ row[0] }}')">Xóa</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
+
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="flash">
+            {% for message in messages %}
+            <span>{{ message }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+
+          <table class="table table-hover table-bordered js-copytextarea" cellpadding="0" cellspacing="0" border="0"
+            id="sampleTable">
+            <thead>
+              <tr>
+                <th width="10"><input type="checkbox" id="all"></th>
+                <th>ID data input</th>
+                <th>ID user</th>
+                <th>Văn bản gốc</th>
+                <th>Tạo lúc</th>
+                <th>Tạo bởi</th>
+                <th>Chức năng</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in data %}
+              <tr>
+                <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td class="table-td-center">
+                  <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
+                    onclick="deleteDataInput('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- Essential javascripts for application to work-->
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!-- Page specific javascripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<!-- Data table plugin-->
+<!-- <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/jquery.dataTables.min.js')}}"></script>
+<!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
 
 <script>
   function deleteDataInput(id_dinput) {
+    swal({
+      title: "Cảnh báo",
+      text: "Bạn có chắc chắn là muốn xóa dữ liệu này?",
+      buttons: ["Hủy bỏ", "Đồng ý"],
+    }).then((willDelete) => {
+      if (willDelete) {
     window.location.href = `/delete_one_data_input/${id_dinput}`;
   }
+});
+}
 
-  setTimeout(function() {
+  setTimeout(function () {
     document.querySelector('.flash').style.display = 'none';
   }, 3000);
 </script>
+{% endblock content %}

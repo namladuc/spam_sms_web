@@ -1,23 +1,98 @@
-Your messege is {{label_pred}}
+{% extends "base.html" %}
+{% block title %} Kết quả {% endblock title %}
+{% block content %}
 
-<br>
+<main class="app-content">
+  <div class="app-title">
+    <ul class="app-breadcrumb breadcrumb">
+      <li class="breadcrumb-item"><a href="/is_spam_or_ham">Kiểm tra</a></li>
+      <li class="breadcrumb-item"><a href="">Kết quả</a></li>
+    </ul>
+    <div id="clock"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tile">
+        <div class="tile-body">
+          <div class="row element-button">
+            <div class="col-sm-2">
+              <a class="btn btn-add btn-sm" href="/is_spam_or_ham" title="Kiểm tra tin nhắn khác"><i
+                  class="fa fa-retweet"></i>
+                Kiểm tra tin nhắn khác</a>
+            </div>
+          </div>
+          <style>
+            .message {
+              font-size: 18px;
+              font-weight: bold;
+              color: #333;
+              margin-bottom: 20px;
+            }
 
-Preprocess step using:
+            .step {
+              border: 2px solid #ccc;
+              padding: 20px;
+              margin-bottom: 20px;
+              border-radius: 5px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
 
-<br>
+            .step-title {
+              font-size: 16px;
+              font-weight: bold;
+              color: #555;
+              margin-bottom: 10px;
+            }
 
-{% for index in step_index %}
+            .step-data {
+              font-size: 14px;
+              color: #777;
+              margin-bottom: 15px;
+            }
+          </style>
 
-Step {{index + 1}}: {{step_title[index]}}
+          <div class="container">
+            <div class="widget-small primary coloured-icon">
+              <div class="info">
+                <h4>Tin nhắn của bạn là </h4>
+                <h1><b>{{label_pred}}</b></h1>
+              </div>
+            </div>
 
-<br>
+            <hr>
 
-{{step_data[index]}}
+            <h3>Các bước xử lý: </h3>
 
-<br>
+            <br>
 
-{% endfor %}
+            {% for index in step_index %}
+            <div class="step">
+              <h4 class="step-title">Step {{ index + 1 }}: {{ step_title[index] }}</h4>
+              <p class="step-data">{{ step_data[index] }}</p>
+            </div>
 
-<br>
-
-<a href="/is_spam_or_ham/{{id_train}}">Another checking ?</a>
+            <hr>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- Essential javascripts for application to work-->
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!-- Page specific javascripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<!-- Data table plugin-->
+<!-- <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/jquery.dataTables.min.js')}}"></script>
+<!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
+{% endblock %}

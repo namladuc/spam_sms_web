@@ -17,17 +17,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-    <style>
-      .flash {
-        background-color: #c5f0c5;
-        color: #333;
-        padding: 10px;
-        border-radius: 5px;
-        margin: 0 auto;
-        text-align: center;
-        display: inline-block;
-      }
-    </style>
 </head>
 
 <body onload="time()" class="app sidebar-mini rtl">
@@ -59,22 +48,11 @@
             <ul class="app-menu">
                 <li><a class="app-menu__item haha" href="/home"><i class='app-menu__icon bx bx-user'></i>
                         <span class="app-menu__label">Trang chủ</span></a></li>
-                <li><a class="app-menu__item" href="/view_model_info"><i class='app-menu__icon bx bx-cube'></i><span
-                            class="app-menu__label">Mô hình</span></a></li>
-                <li><a class="app-menu__item" href="/view_data_train"><i class='app-menu__icon bx bxs-data'></i><span
-                            class="app-menu__label">Dữ liệu</span></a></li>
-                <li><a class="app-menu__item" href="/view_data_group_info"><i
-                            class='app-menu__icon bx bxs-folder'></i><span class="app-menu__label">Nhóm dữ
-                            liệu</span></a></li>
                 <li><a class="app-menu__item" href="/view_data_input"><i
-                            class='app-menu__icon bx bxs-log-in-circle'></i><span class="app-menu__label">Dữ liệu đầu
-                            vào</span></a></li>
+                            class='app-menu__icon bx bxs-log-in-circle'></i><span class="app-menu__label">Lịch sử kiểm tra</span></a></li>
                 <li><a class="app-menu__item" href="/is_spam_or_ham"><i
                             class='app-menu__icon bx bxs-check-shield'></i><span class="app-menu__label">Kiểm
                             tra</span></a></li>
-                <li><a class="app-menu__item" href="/view_account"><i
-                            class='app-menu__icon bx bxs-user-account'></i><span class="app-menu__label">Tài
-                            khoản</span></a></li>
             </ul>
     </aside>
     {% block content %}{% endblock content %}

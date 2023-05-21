@@ -288,6 +288,9 @@ def form_add_data_group_info():
         """
         cur.execute(sql, (group_name, pathToFile, test_size))
         mysql.connection.commit()
+        flash("Thêm thành công !!!")
+
+        return redirect(url_for("view_data_group_info"))
     return render_template(session['role'] + "/form_add_data_group_info.html", userinfo = session['username'])
 
 @app.route("/view_model_info/view_model_train_state/form_add_model", methods=['GET','POST'])
@@ -374,8 +377,9 @@ def form_add_model():
                     VALUES (%s, %s)
                     """, (id_max, model_info))
         mysql.connection.commit()
+        flash("Thêm thành công !!!")
             
-        return redirect(url_for("home"))
+        return redirect(url_for("view_model_train_state"))
     
     return render_template(session['role'] + "/form_add_model.html",
                            model_infos = model_info_choice,
@@ -859,7 +863,6 @@ def view_model_train_state():
 
     return render_template(session['role'] + "/view_model_train_state.html", data=model_train_state, userinfo=session['username'])
 
-##cần fix
 
 @app.route("/view_model_info/view_model_train_state/update_one_model_train_state/<int:id_train>", methods=['GET','POST'])
 def update_one_model_train_state(id_train):
@@ -1440,7 +1443,7 @@ def is_spam_or_ham(id_train = ''):
      
     
     
-@app.route("/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
+@app.route("/is_spam_or_ham/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
 def is_spam_or_ham_result(id_train, text):
     text = quote(text)
     cur = mysql.connection.cursor()

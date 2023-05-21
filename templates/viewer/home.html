@@ -1,1 +1,58 @@
-Viewer
+{% extends "baseviewer.html" %}
+{% block title %} Trang chủ {% endblock title %}
+{% block content %}
+<main class="app-content">
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb side">
+            <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+
+
+                    <header style="background:#333; color:#fff; text-align:center; padding:1em;">  
+                        <h1>Công nghệ - Đổi mới sáng tạo</h1> 
+                        </header>
+                        
+                        <nav style="background:#ddd; padding:1em;">
+                        <ul style="list-style-type:none; display:flex; justify-content:space-around;">
+                        <li><a href="#" style="text-decoration:none; color:#333;">AI & Robotics</a></li>  
+                        <li><a href="#" style="text-decoration:none; color:#333;">Điện thoại thông minh  </a></li>  
+                        <li><a href="#" style="text-decoration:none; color:#333;">Máy tính</a></li>
+                        <li><a href="#" style="text-decoration:none; color:#333;">Phần mềm</a></li>
+                        <li><a href="#" style="text-decoration:none; color:#333;">Internet of Things</a></li>
+                        </ul>
+                        </nav>  
+                        
+                        <section style="width:60%; margin:2em auto; border:1px solid #ddd; padding:1em; border-radius:4px;">
+                            <h2 style="text-align:center; margin-bottom:1em;">Tin tức mới nhất</h2> 
+                            <article style="display:flex; margin-bottom:1em;"> 
+                            <img src="static/images/google.jpg" width="200">
+                            <div style="margin-left:1em;">
+                            <h3>Google ra mắt Pixel 6 - điện thoại thông minh mới </h3>    
+                            <p>Google vừa trình làng bộ đôi điện thoại thông minh Pixel 6 và Pixel 6 Pro mới...</p>   </div>
+                            </article>  
+                            <article  style="display:flex; margin-bottom:1em;">  
+                            <img src="static/images/M.jpg" width="200">
+                            <div style="margin-left:1em;">
+                            <h3>Windows 11 chính thức ra mắt - nâng cấp miễn phí cho Windows 10</h3> 
+                            <p>Microsoft đã chính thức ra mắt hệ điều hành Windows 11 mới với nhiều cải tiến về giao diện...</p>    
+                            </div> 
+                            </article>
+                            </section>
+                        
+                        <footer  style="background:#333; color:#fff; text-align:center; padding:1em;">  
+                        <p>Bản quyền thuộc về T1</p>
+                        </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+{% endblock content %}
