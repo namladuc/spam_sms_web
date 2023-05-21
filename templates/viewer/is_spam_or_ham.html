@@ -1,41 +1,84 @@
-<form method="post" action="/is_spam_or_ham/{{id_train}}" enctype ="multipart/form-data">
-    <span >
-        <b>Kiểm tra tin nhắn là 'Spam' hay 'Ham'</b>
-    </span>
+{% extends "baseviewer.html" %}
+{% block title%} Kiểm tra SMS {% endblock %}
+{% block content %}
+<main class="app-content">
+    </div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="">Kiểm tra SMS</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
 
-        <div>
-            {% if err_code %}
-            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
-              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-              <strong>{{ err_code }}</strong>
+            <div class="tile">
+
+                <h3 class="tile-title">Kiểm tra SMS</h3>
+                <div class="tile-body">
+                    <div class="row element-button">
+                        <div class="col-sm-2">
+                            <a class="btn btn-add btn-sm" href="/view_data_input" title="Thêm mô hình"><i
+                                    class="fa fa-retweet"></i>
+                                Xem lịch sử nhập</a>
+                        </div>
+                    </div>
+
+                    <form class="row" method="post" action="/is_spam_or_ham/{{id_train}}" enctype="multipart/form-data">
+
+                        <div>
+                            {% if err_code %}
+                            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>{{ err_code }}</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Lựa chọn mô hình</label>
+                            <select class="form-control" id="model_train_id" name="model_train_id"
+                                onchange="if (this.value) window.location.href='/is_spam_or_ham/' + this.value">
+                                {% for data in model_trains %}
+
+                                <option value="{{data[0]}}"> {{data[1]}} </option>
+
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Nhập tin nhắn</label>
+                            <input class="form-control" type="text" title="text_input" name="text_input"
+                                id="text_input">
+                        </div>
+
+                        <!--=====ĐĂNG NHẬP======-->
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Kiểm tra" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% endif %}
         </div>
-
-        <div >
-            <label>Lựa chọn mô hình</label>
-            <select id="model_train_id" name="model_train_id" onchange="if (this.value) window.location.href='/is_spam_or_ham/' + this.value">
-              {% for data in model_trains %}
-
-              <option value="{{data[0]}}"> {{data[1]}} </option>
-
-              {% endfor %}
-            </select>
-        </div>
-
-        <div>
-            <label class="control-label">Nhập tin nhắn</label>
-            <input type="text" title="text_input" name="text_input"
-                id="text_input">
-        </div>
-
-        <!--=====ĐĂNG NHẬP======-->
-        <div>
-            <input type="submit" value="Kiểm tra" id="submit" />
-        </div>
-</form>
-
-<a href="/view_data_input">Xem lịch sử nhập</a>
+    </div>
+</main>
+<!-- Essential javascripts for application to work-->
+<script src="{{url_for('static', filename='doc/js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/popper.min.js')}}"></script>
+<script src="{{url_for('static', filename='doc/js/bootstrap.min.js')}}"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='doc/js/main.js')}}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{url_for('static', filename='doc/js/plugins/pace.min.js')}}"></script>
+<!-- Page specific javascripts-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<!-- Data table plugin-->
+<!-- <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/jquery.dataTables.min.js')}}"></script>
+<!-- <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script> -->
+<script src="{{url_for('static', filename='doc/js/plugins/dataTables.bootstrap.min.js')}}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
 
 <script>
     /*
@@ -50,3 +93,4 @@
         });
       });*/
 </script>
+{% endblock content %}

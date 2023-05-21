@@ -1440,7 +1440,7 @@ def is_spam_or_ham(id_train = ''):
      
     
     
-@app.route("/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
+@app.route("/is_spam_or_ham/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
 def is_spam_or_ham_result(id_train, text):
     text = quote(text)
     cur = mysql.connection.cursor()
