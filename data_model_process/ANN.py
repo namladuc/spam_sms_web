@@ -91,7 +91,7 @@ class ANN:
 
         return grads
 
-    def predict(self, X, y):
+    def predict(self, X_test, y='None'):
         """
         This function is used to predict the results of a  L-layer neural network.
         
@@ -102,7 +102,7 @@ class ANN:
         Returns:
         p -- predictions for the given dataset X
         """
-        
+        X = X_test.T
         m = X.shape[1]
         n = len(self.parameters) // 2 # number of layers in the neural network
         p = np.zeros((1,m))
@@ -121,9 +121,9 @@ class ANN:
         #print results
         #print ("predictions: " + str(p))
         #print ("true labels: " + str(y))
-        print("Accuracy: "  + str(np.sum((p == y)/m)))
+        # print("Accuracy: "  + str(np.sum((p == y)/m)))
             
-        return p
+        return p.T
 
     def update_parameters(self, parameters, grads, learning_rate):
         """

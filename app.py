@@ -30,6 +30,7 @@ import plotly.figure_factory as ff
 
 # import module
 from data_model_process import *
+from data_model_process import HardMargin, SoftMargin
 
 app = Flask(__name__)
 app.secret_key = 'La Nam'
@@ -855,8 +856,10 @@ def delete_one_model_info(id_model):
 def view_model_train_state():
     cur = mysql.connection.cursor()
     sql = """
-                        SELECT *
-                        FROM model_train_state 
+                    SELECT mts.*, mi.model_name
+                    FROM model_train_state mts
+                    JOIN model_train mt ON mt.id_train = mts.id_train
+                    JOIN model_info mi ON mi.id_model = mt.id_model
                     """
     cur.execute(sql)
     model_train_state = cur.fetchall()
