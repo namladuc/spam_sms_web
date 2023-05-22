@@ -5,7 +5,7 @@ from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
@@ -881,15 +881,31 @@ def update_one_model_train_state(id_train):
     if len(one_model_train_state) == 0:
         return "Error"
 
+    sql_get_model_info_selected = """
+                                SELECT *
+                                FROM model_info
+                                JOIN model_train ON model_train.id_model = model_info.id_model
+                                WHERE model_train.id_train = %s
+                                """
+    cur.execute(sql_get_model_info_selected, (id_train, ))
+    model_info_selected = cur.fetchall()
+    one_model_info_choice = []
+    for elm in model_info_selected:
+        tmp = " - ".join([str(sub_elm) for sub_elm in list(elm[1:])])
+        one_model_info_choice.append(tmp)
+
+
     sql = """
             SELECT *
             FROM model_info
+            JOIN model_train ON model_train.id_model = model_info.id_model
+            WHERE model_train.id_train != %s
         """
-    cur.execute(sql)
+    cur.execute(sql, (id_train, ))
     model_infos = cur.fetchall()
     model_info_choice = []
     for elm in model_infos:
-        tmp = " - ".join(list(elm[1:]))
+        tmp = " - ".join([str(sub_elm) for sub_elm in list(elm[1:])])
         model_info_choice.append(tmp)
 
     sql = """
@@ -950,6 +966,7 @@ def update_one_model_train_state(id_train):
     return render_template(session['role'] + "/update_one_model_train_state.html",
                            current_data=one_model_train_state[0],
                            model_infos=model_info_choice,
+                           one_model_info_choice=one_model_info_choice[0],
                            data_group=data_group,
                            userinfo=session['username'])
 
@@ -1448,9 +1465,9 @@ def is_spam_or_ham(id_train = ''):
     
 @app.route("/is_spam_or_ham/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
 def is_spam_or_ham_result(id_train, text):
-    text = quote(text)
+    text = unquote(text)
     cur = mysql.connection.cursor()
-    
+   
     cur.execute("""
                 SELECT tfidf_path, path_to_state
                 FROM model_train_state mts
