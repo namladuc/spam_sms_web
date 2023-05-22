@@ -5,7 +5,7 @@ from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
@@ -1465,9 +1465,9 @@ def is_spam_or_ham(id_train = ''):
     
 @app.route("/is_spam_or_ham/is_spam_or_ham_result/<string:id_train>_<string:text>", methods=['GET','POST'])
 def is_spam_or_ham_result(id_train, text):
-    text = quote(text)
+    text = unquote(text)
     cur = mysql.connection.cursor()
-    
+   
     cur.execute("""
                 SELECT tfidf_path, path_to_state
                 FROM model_train_state mts
