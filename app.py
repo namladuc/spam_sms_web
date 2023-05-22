@@ -1021,7 +1021,7 @@ def view_one_model_train_state(id_train):
                     FROM data_group_split dgs
                     WHERE dgs.id_dgroup = %s
                 )
-                ORDER BY create_at ASC
+                ORDER BY text DESC
                 """, (state_info[0][1], ))
     records = cur.fetchall()
     columnName = ['Text', 'Target']
@@ -1036,7 +1036,7 @@ def view_one_model_train_state(id_train):
     test_size, path_to_tfidf, group_data_name = cur.fetchall()[0]
     
     tfidf = pickle.load(open(path_to_tfidf, 'rb'))
-    X = tfidf.transform(data_input['Text'].values)
+    X = tfidf.transform(data_input['Text'].values).toarray()
     
     train_info, test_info = take_info_output(X, data_input['Target'].values,
                                              state_info[0][2], test_size)
