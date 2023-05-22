@@ -5,9 +5,9 @@ import numpy as np
 
 import re
 import nltk
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.stem import WordNetLemmatizer
@@ -45,7 +45,7 @@ def step_5_join_text(Text):
 # Changing text data in to numbers. 
 def step_6_numerize(Text, path_to_tfidf):
     tfidf = pickle.load(open(path_to_tfidf, 'rb')) # "../" + 
-    return tfidf.transform(np.asarray([Text]))
+    return tfidf.transform(np.asarray([Text])).toarray()
 
 # Full step for one text
 def step_corpus_for_one_text(Text):
