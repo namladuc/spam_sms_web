@@ -30,6 +30,7 @@ import plotly.figure_factory as ff
 
 # import module
 from data_model_process import *
+from data_model_process import HardMargin, SoftMargin
 
 app = Flask(__name__)
 app.secret_key = 'La Nam'
@@ -855,8 +856,10 @@ def delete_one_model_info(id_model):
 def view_model_train_state():
     cur = mysql.connection.cursor()
     sql = """
-                        SELECT *
-                        FROM model_train_state 
+                    SELECT mts.*, mi.model_name
+                    FROM model_train_state mts
+                    JOIN model_train mt ON mt.id_train = mts.id_train
+                    JOIN model_info mi ON mi.id_model = mt.id_model
                     """
     cur.execute(sql)
     model_train_state = cur.fetchall()
@@ -1021,7 +1024,7 @@ def view_one_model_train_state(id_train):
                     FROM data_group_split dgs
                     WHERE dgs.id_dgroup = %s
                 )
-                ORDER BY create_at ASC
+                ORDER BY text DESC
                 """, (state_info[0][1], ))
     records = cur.fetchall()
     columnName = ['Text', 'Target']
@@ -1036,7 +1039,7 @@ def view_one_model_train_state(id_train):
     test_size, path_to_tfidf, group_data_name = cur.fetchall()[0]
     
     tfidf = pickle.load(open(path_to_tfidf, 'rb'))
-    X = tfidf.transform(data_input['Text'].values)
+    X = tfidf.transform(data_input['Text'].values).toarray()
     
     train_info, test_info = take_info_output(X, data_input['Target'].values,
                                              state_info[0][2], test_size)
