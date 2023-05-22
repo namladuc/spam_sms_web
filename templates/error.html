@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title> Waiting</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Arvo'>
+<link rel="stylesheet" href="{{ url_for('static', filename='doc/css/error.css') }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='web/img/favicon.png')}}"/>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<section class="page_404">
+	<div class="container">
+		<div class="row">	
+		<div class="col-sm-12 ">
+		<div class="col-sm-10 col-sm-offset-1  text-center">
+		<div class="four_zero_four_bg">
+			<h1 class="text-center ">Trang bạn tìm kiếm không thấy</h1> 
+		
+		
+		</div>
+		
+		<div class="contant_box_404">
+		<h3 style="font-size:20px; font-style: italic;" class="h2">
+            {{error}}
+		</h3>
+        <p><a href="https://github.com/assassinnyt2811/quanlysinhvien">Liên hệ với bộ phận kỹ thuật</a></p>
+		
+		<p>Hãy quay lại trang chủ</p>
+		
+
+		<button class="button-49" onclick="window.location.href='/home'" role="button">Go to Home</button>
+	</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</section>
+<!-- partial -->  
+</body>
+</html>

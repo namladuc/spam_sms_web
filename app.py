@@ -261,7 +261,7 @@ def form_add_data_group_info():
         test_size = details['test_size']
         
         if 'FileTFIDFUpload' not in request.files.keys():
-            return "Error 1"
+            abort(500)
         else:
             tfidf_file = request.files['FileTFIDFUpload']
             
@@ -279,7 +279,7 @@ def form_add_data_group_info():
         # file processing
         if tfidf_file.filename != '':
             if tfidf_file.filename.split(".")[-1] != 'pickle':
-                return "Error"
+                abort(500)
             pathToFile = app.config['TFIDF_FOLDER'] + "tfidf_" + str(id_max) + ".pickle"
             tfidf_file.save(pathToFile)
             
@@ -319,7 +319,7 @@ def form_add_model():
     if request.method == 'POST':
         details = request.form
         if 'FileModelUpload' not in request.files.keys():
-            return "Error 1"
+            abort(500)
         else:
             model_file = request.files['FileModelUpload']
         time_train = details['time_train']
@@ -340,7 +340,7 @@ def form_add_model():
         # file processing
         if model_file.filename != '':
             if model_file.filename.split(".")[-1] != 'pickle':
-                return "Error 2"
+                abort(500)
             pathToFile = app.config['MODEL_FOLDER'] + "model_" + str(id_max) + ".pickle"
             model_file.save(pathToFile)
             
@@ -416,7 +416,7 @@ def update_one_data_train(id_dtrain):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
 
     info_one_data_train = records[0]
 
@@ -483,6 +483,10 @@ def update_one_data_train(id_dtrain):
 
 @app.route("/delete_one_data_train/<int:id_dtrain>")
 def delete_one_data_train(id_dtrain):
+    
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
     sql1 = """
             SELECT * FROM data_train WHERE data_train.id_dtrain = %s
@@ -491,7 +495,7 @@ def delete_one_data_train(id_dtrain):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
     sql2 = """
                     SELECT * FROM data_group_split WHERE data_group_split.id_dtrain = %s
                 """
@@ -499,7 +503,7 @@ def delete_one_data_train(id_dtrain):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
 
     sql_data_train = """
                     DELETE FROM data_train
@@ -544,7 +548,7 @@ def update_one_group_info(id_dgroup):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
 
     record = records[0]
 
@@ -564,6 +568,9 @@ def update_one_group_info(id_dgroup):
 
 @app.route("/delete_one_group_info/<int:id_dgroup>")
 def delete_one_group_info(id_dgroup):
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
     sql = """
             SELECT * 
@@ -605,7 +612,7 @@ def view_one_group_info(id_dgroup):
                 """, (id_dgroup, ))
     check_exist = cur.fetchall()
     if len(check_exist) == 0:
-        return "Error"
+        abort(500)
     
     sql = """
         SELECT dt.text, dt.class_id, c.label
@@ -620,7 +627,7 @@ def view_one_group_info(id_dgroup):
     cur.execute(sql, (id_dgroup, ))
     records = cur.fetchall()
     if len(records) == 0:
-        return "Error"
+        abort(500)
     
     columnName = ['Text', 'Class', 'Label']
     data = pd.DataFrame.from_records(records, columns=columnName)
@@ -830,6 +837,9 @@ def update_one_model_info(id_model):
 # chưa có thông báo xác nhận xóa không
 @app.route("/delete_one_model_info/<int:id_model>")
 def delete_one_model_info(id_model):
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
     sql = """
             SELECT * 
@@ -879,7 +889,7 @@ def update_one_model_train_state(id_train):
     one_model_train_state = cur.fetchall()
     
     if len(one_model_train_state) == 0:
-        return "Error"
+        abort(500)
 
     sql_get_model_info_selected = """
                                 SELECT *
@@ -973,6 +983,9 @@ def update_one_model_train_state(id_train):
 # chưa có thông báo xác nhận xóa không
 @app.route("/delete_one_model_train_state/<int:id_train>")
 def delete_one_model_train_state(id_train):
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
 
     sql = """
@@ -983,7 +996,7 @@ def delete_one_model_train_state(id_train):
     path = cur.fetchall()
     
     if len(path) == 0:
-        return "Error"
+        abort(500)
     
     path = path[0]
     
@@ -1017,7 +1030,7 @@ def view_one_model_train_state(id_train):
                 """, (id_train, ))
     state_info = cur.fetchall()
     if len(state_info) == 0:
-        return "Error"
+        abort(500)
     
     # model info
     cur.execute("""
@@ -1113,6 +1126,9 @@ def view_distinct_data_input():
 
 @app.route("/delete_one_data_input/<int:id_data_input>", methods=['GET','POST'])
 def delete_one_data_input(id_data_input):
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
     sql = """
             SELECT * FROM data_input WHERE data_input.id = %s;
@@ -1121,7 +1137,7 @@ def delete_one_data_input(id_data_input):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
 
     sql_delete_input_data = """
                        DELETE FROM data_input
@@ -1206,7 +1222,7 @@ def update_one_account(id_user):
     one_account = cur.fetchall()
 
     if len(one_account) == 0:
-        return "Error"
+        abort(500)
 
     if request.method == 'POST':
         details = request.form
@@ -1234,6 +1250,9 @@ def update_one_account(id_user):
 
 @app.route("/delete_one_account/<int:id_user>")
 def delete_one_account(id_user):
+    if session['role_id'] != 1:
+        abort(500)
+    
     cur = mysql.connection.cursor()
 
     sql = """
@@ -1244,7 +1263,7 @@ def delete_one_account(id_user):
     records = cur.fetchall()
 
     if len(records) == 0:
-        return "Error"
+        abort(500)
 
     record = records[0]
 
@@ -1272,16 +1291,16 @@ def form_add_data_train():
     
     if request.method == 'POST':
         if 'FileDataTrainUpload' not in request.files.keys():
-            return "Error 1"
+            abort(500)
         else:
             data_file = request.files['FileDataTrainUpload']
             
         # file processing
         if data_file.filename == '':
-            return "Error"
+            abort(500)
         
         if data_file.filename.split(".")[-1] != 'csv':
-            return "Error"
+            abort(500)
         
         data = pd.read_csv(data_file, index_col=0, delimiter="|")
         
@@ -1356,7 +1375,7 @@ def form_add_data_input_to_data_train(id_data_input):
                 """, (id_data_input, ))
     data = cur.fetchall()
     if len(data) == 0:
-        return "Error"
+        abort(500)
     data = data[0][0]
     
     cur.execute("""SELECT *
@@ -1372,7 +1391,7 @@ def form_add_data_input_to_data_train(id_data_input):
         cur.execute("SELECT * FROM data_train WHERE text = %s", (data_clean, ))
         check = cur.fetchall()
         if (len(check) != 0):
-            return "Error"
+            abort(500)
         
         lst_group= list(detail.keys())
         lst_group.remove('text_original')
@@ -1425,7 +1444,7 @@ def is_spam_or_ham(id_train = ''):
                 """)
     model_trains = cur.fetchall()
     if len(model_trains) == 0:
-        return "Error"
+        abort(500)
     
     if id_train == '':
         id_train = model_trains[0][0]
@@ -1477,7 +1496,7 @@ def is_spam_or_ham_result(id_train, text):
     tfidf_path = cur.fetchall()
     
     if len(tfidf_path) == 0:
-        return "Error"
+        abort(500)
     
     path_to_state = tfidf_path[0][1]
     tfidf_path = tfidf_path[0][0]
@@ -1516,4 +1535,15 @@ def is_spam_or_ham_result(id_train, text):
                            id_train = id_train,
                            userinfo=session['username'])
 
-
+# Error Handler
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html',
+                           error = error), 404
+    
+@app.errorhandler(500)
+def no_role_access(error):
+    return render_template('error.html',
+                           error = """Lỗi thao tác: với chương trình 
+                           Bạn đã làm không đúng với hướng dẫn sử dụng
+                           Hoặc bạn không có quyền truy cập vào trang này"""), 500

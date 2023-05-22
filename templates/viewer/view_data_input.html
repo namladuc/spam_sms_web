@@ -34,7 +34,6 @@
                 <th>Văn bản gốc</th>
                 <th>Tạo lúc</th>
                 <th>Tạo bởi</th>
-                <th>Chức năng</th>
               </tr>
             </thead>
             <tbody>
@@ -46,11 +45,6 @@
                 <td>{{ row[2] }}</td>
                 <td>{{ row[3] }}</td>
                 <td>{{ row[4] }}</td>
-                <td class="table-td-center">
-                  <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                    onclick="deleteDataInput('{{ row[0] }}')"><i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
               </tr>
               {% endfor %}
             </tbody>
