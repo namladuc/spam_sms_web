@@ -1,3 +1,5 @@
 from .Preprocess import *
 from .Model_base import *
-from .SVM_Classes import HardMargin, SoftMargin
+from .HardMargin import HardMargin
+from .SoftMargin import SoftMargin
+from .ANN import ANN

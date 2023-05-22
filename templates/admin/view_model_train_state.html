@@ -45,13 +45,13 @@
               <tr>
                 <th width="10"><input type="checkbox" id="all"></th>
                 <th>ID train</th>
+                
                 <th>ID data group</th>
                 <th>Trạng thái</th>
+                <th>Tên mô hình</th>
                 <th>Thời gian training</th>
                 <th>Accuracy model train</th>
                 <th>Accuracy model test</th>
-                <th>Create at</th>
-                <th>Create by</th>
                 <th>Update at</th>
                 <th>Update by</th>
                 <th width="150">Chức năng</th>
@@ -63,6 +63,7 @@
                 <td width="10"><input type="checkbox" id="myChecker" name="check1" value="1"></td>
                 <td>{{ row[0] }}</td>
                 <td>{{ row[1] }}</td>
+                
                 <td class="text-center">
                 {% if row[3] == 1 %}
                     <span><i class="fa fa-check-circle" aria-hidden="true" style="color: green;"></i></span>
@@ -70,11 +71,10 @@
                     <span><i class="fa fa-times-circle" aria-hidden="true" style="color: red;"></i></span>
                 {% endif %}
                 </td>
+                <td>{{ row[-1] }}</td>
                 <td>{{ row[4] }}</td>
                 <td>{{ row[5] }}</td>
                 <td>{{ row[6] }}</td>
-                <td>{{ row[7] }}</td>
-                <td>{{ row[8] }}</td>
                 <td>{{ row[9] }}</td>
                 <td>{{ row[10] }}</td>
                 <td class="table-td-center">
