@@ -21,11 +21,9 @@ def predict_model(path_to_state, input):
 
 def take_info_output(X, y, path_to_state, test_size):
     model = pickle.load(open(path_to_state, 'rb')) # "../" + 
-    
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                         test_size=test_size,
                                                         random_state=42)
-
     y_pred_train = model.predict(X_train)
     y_pred_test = model.predict(X_test)
     
