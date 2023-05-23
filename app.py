@@ -601,7 +601,7 @@ def view_one_group_info(id_dgroup):
     # word cloud
     # M: Modify
     # R: Read
-    
+    print(id_dgroup)
     cur = mysql.connection.cursor()
     
     # check exist group id
@@ -902,6 +902,7 @@ def update_one_model_train_state(id_train):
     one_model_info_choice = []
     for elm in model_info_selected:
         tmp = " - ".join([str(sub_elm) for sub_elm in list(elm[1:])])
+        one_model_info_choice.append(elm[0])
         one_model_info_choice.append(tmp)
 
 
@@ -915,8 +916,11 @@ def update_one_model_train_state(id_train):
     model_infos = cur.fetchall()
     model_info_choice = []
     for elm in model_infos:
+        ar_tmp = []
         tmp = " - ".join([str(sub_elm) for sub_elm in list(elm[1:])])
-        model_info_choice.append(tmp)
+        ar_tmp.append(elm[0])
+        ar_tmp.append(tmp)
+        model_info_choice.append(ar_tmp)
 
     sql = """
             SELECT id_dgroup, group_name
@@ -964,6 +968,7 @@ def update_one_model_train_state(id_train):
         for i in range(len(model_info_choice)):
             if model_info == model_info_choice[i]:
                 model_info = model_infos[i][0]
+                break
 
         cur.execute("""
                     UPDATE model_train SET id_model = %s
@@ -976,7 +981,7 @@ def update_one_model_train_state(id_train):
     return render_template(session['role'] + "/update_one_model_train_state.html",
                            current_data=one_model_train_state[0],
                            model_infos=model_info_choice,
-                           one_model_info_choice=one_model_info_choice[0],
+                           one_model_info_choice=one_model_info_choice,
                            data_group=data_group,
                            userinfo=session['username'])
 

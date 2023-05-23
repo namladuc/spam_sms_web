@@ -34,9 +34,9 @@
                         <div class="form-group col-md-12">
                             <label class="control-label">Thông tin mô hình</label>
                             <select class="form-control" id="model_info_update" name="model_info_update">
-                                <option> {{ one_model_info_choice }} </option>
+                                <option value="{{ one_model_info_choice[0] }}"> {{ one_model_info_choice[1] }} </option>
                                 {% for data in model_infos %}
-                                <option> {{data}} </option>
+                                <option value="{{data[0]}}"> {{data[1]}} </option>
                                 {% endfor %}
                             </select>
                         </div>
