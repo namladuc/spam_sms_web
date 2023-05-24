@@ -3,6 +3,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB, BernoulliNB
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
 from matplotlib.colors import ListedColormap

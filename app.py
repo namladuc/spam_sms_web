@@ -601,7 +601,6 @@ def view_one_group_info(id_dgroup):
     # word cloud
     # M: Modify
     # R: Read
-    print(id_dgroup)
     cur = mysql.connection.cursor()
     
     # check exist group id
@@ -870,6 +869,7 @@ def view_model_train_state():
                     FROM model_train_state mts
                     JOIN model_train mt ON mt.id_train = mts.id_train
                     JOIN model_info mi ON mi.id_model = mt.id_model
+                    ORDER BY mts.id_dgroup ASC, mts.time_train ASC, mts.accuracy_model_test DESC
                     """
     cur.execute(sql)
     model_train_state = cur.fetchall()
