@@ -1463,16 +1463,23 @@ def is_spam_or_ham_beta():
         upper = details['upper']
 
         model = pickle.load(open('./static/model/BBNs_Beta.pickle', 'rb'))
-        if advertisement != '-1':
+        if length != '-1' and upper != '-1':
             q = model.query(variables=['spam'],
                             evidence={'length': dict_const['length'][length],
-                                      'advertisement': dict_const['advertisement'][advertisement],
                                       'upper':dict_const['upper'][upper]})
+        elif advertisement != '-1' and length == '-1' and upper != '-1':
+            q = model.query(variables=['spam'],
+                            evidence={'upper':dict_const['upper'][upper],
+                                      'advertisement': dict_const['advertisement'][advertisement]})
+        elif length == '-1' and upper != '-1':
+            q = model.query(variables=['spam'],
+                            evidence={'upper':dict_const['upper'][upper]})
+        elif length != '-1' and upper == '-1':
+            q = model.query(variables=['spam'],
+                            evidence={'length': dict_const['length'][length]})
         else:
-            q = model.query(variables=['spam'],
-                            evidence={'length': dict_const['length'][length],
-                                      'upper':dict_const['upper'][upper]})
-        
+            q = model.query(variables=['spam'])
+            
         spam_prob = q.get_value(spam='yes')
         ham_prob = q.get_value(spam='no')
         if spam_prob >= 0.5:
