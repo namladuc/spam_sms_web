@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title%} Kiểm tra SMS {% endblock %}
+{% block content %}
+<main class="app-content">
+    </div>
+    <div class="app-title">
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><a href="">Kiểm tra SMS - Bayesian Belief Network</a></li>
+        </ul>
+        <div id="clock"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="tile">
+
+                <h3 class="tile-title">Kiểm tra SMS</h3>
+                <div class="tile-body">
+
+                    <form class="row" method="post" action="/is_spam_or_ham/is_spam_or_ham_beta" enctype="multipart/form-data">
+
+                        <div class="form-group col-md-12">
+                            {% if ham_prob %}
+                            <div class="alert alert-danger" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                Tin nhắn của bạn là <strong>{{ content }}</strong>, xác suất `Ham` {{ ham_prob }}%
+                            </div>
+                            {% endif %}
+
+                            {% if spam_prob %}
+                            <div class="alert alert-success" style="text-align: left; font-size: 15px;">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                Tin nhắn của bạn là  <strong>{{ content }}</strong>, xác suất `Spam` {{ spam_prob }}%
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Tin nhắn có là tin nhắn quảng cáo không</label>
+                            <select class="form-control" id="advertisement" name="advertisement">
+                                <option value="1"> Có </option>
+                                <option value="0"> Không </option>
+                                <option value="-1"> Không phân biệt được </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Độ dài tin nhắn</label>
+                            <select class="form-control" id="length_text" name="length_text">
+                                <option value="1"> Dài ( >= 150 ký tự) </option>
+                                <option value="0"> Ngắn ( < 150 ký tự) </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Số lượng chữ cái viết hoa</label>
+                            <select class="form-control" id="upper" name="upper">
+                                <option value="1"> Nhiều ( >= 7) </option>
+                                <option value="0"> ít ( < 7) </option>
+                            </select>
+                        </div>
+
+                     
+
+                        <!--=====ĐĂNG NHẬP======-->
+                        <div class="form-group col-md-4">
+                            <input class="btn btn-save" type="submit" id="submit" value="Kiểm tra" />
+                        </div>
+                    </form>
+
+                    <script>
+                        /*
+                        $(function(){
+                            // bind change event to select
+                            $('#model_train_id').on('change', function () {
+                                var url = $(this).val(); // get selected value
+                                if (url) { // require a URL
+                                    window.location = url; // redirect
+                                }
+                                return false;
+                            });
+                          });*/
+                    </script>
+                    {% endblock %}

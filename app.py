@@ -23,6 +23,11 @@ import math
 import json
 from datetime import datetime
 
+# BBNs model
+from pgmpy.models import BayesianModel, BayesianNetwork
+from pgmpy.factors.discrete import TabularCPD
+from pgmpy.inference import VariableElimination
+
 # plot
 import plotly
 import plotly.express as px
@@ -1434,6 +1439,63 @@ def form_add_data_input_to_data_train(id_data_input):
 
 # ---- ADMIN ONLY ----
 
+@app.route("/is_spam_or_ham/is_spam_or_ham_beta", methods=['GET','POST'])
+def is_spam_or_ham_beta():
+    dict_const = {
+        'length':{
+            '0':'short',
+            '1':'long'
+        },
+        'upper':{
+            '1':'much',
+            '0':'little'
+        },
+        'advertisement':{
+            '1':'yes',
+            '0':'no'
+        }
+    }
+    
+    if request.method == 'POST':
+        details = request.form
+        length = details['length_text']
+        advertisement = details['advertisement']
+        upper = details['upper']
+
+        model = pickle.load(open('./static/model/BBNs_Beta.pickle', 'rb'))
+        if advertisement != '-1':
+            q = model.query(variables=['spam'],
+                            evidence={'length': dict_const['length'][length],
+                                      'advertisement': dict_const['advertisement'][advertisement],
+                                      'upper':dict_const['upper'][upper]})
+        else:
+            q = model.query(variables=['spam'],
+                            evidence={'length': dict_const['length'][length],
+                                      'upper':dict_const['upper'][upper]})
+        
+        spam_prob = q.get_value(spam='yes')
+        ham_prob = q.get_value(spam='no')
+        if spam_prob >= 0.5:
+            content = "Spam"
+            spam_prob *= 100
+            spam_prob = round(spam_prob, 2)
+            return render_template(session['role'] + "/is_spam_or_ham_beta.html",
+                            spam_prob = spam_prob,
+                            content = content,
+                           userinfo=session['username'])
+        content = "Ham"
+        ham_prob *= 100
+        ham_prob = round(ham_prob, 2)
+        return render_template(session['role'] + 
+                               "/is_spam_or_ham_beta.html",
+                               ham_prob = ham_prob,
+                               content = content,
+                           userinfo=session['username'])
+        
+        
+    return render_template(session['role'] + "/is_spam_or_ham_beta.html",
+                           userinfo=session['username'])
+    
 # User using model
 @app.route("/is_spam_or_ham", methods=['GET','POST'])
 @app.route("/is_spam_or_ham/<string:id_train>", methods=['GET','POST'])
