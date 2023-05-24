@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2023 at 07:00 AM
+-- Generation Time: May 24, 2023 at 06:16 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -17489,7 +17489,10 @@ INSERT INTO `data_input` (`id`, `id_user`, `original_text`, `create_at`, `create
 (8, 1, 'Beautifull weekend coming up. Wanna go out? Sophie gave me your nnumber. Check out my profile here: bit.ly/profileGB12RD', '2023-05-07 18:11:29', 'Administrator', '2023-05-07 18:11:29', 'Administrator'),
 (9, 1, 'Call me if you want more money.', '2023-05-08 14:50:44', 'Administrator', '2023-05-08 14:50:44', 'Administrator'),
 (10, 1, 'You’ve won a prize! Go to [link] to claim your $500 Amazon gift card.', '2023-05-22 16:07:33', 'Administrator', '2023-05-22 16:07:33', 'Administrator'),
-(11, 1, 'You’ve, won', '2023-05-22 16:24:02', 'Administrator', '2023-05-22 16:24:02', 'Administrator');
+(11, 1, 'You’ve, won', '2023-05-22 16:24:02', 'Administrator', '2023-05-22 16:24:02', 'Administrator'),
+(12, 1, 'Call me if you want more money', '2023-05-23 12:03:21', 'Administrator', '2023-05-23 12:03:21', 'Administrator'),
+(13, 1, 'Call me if you want more money', '2023-05-23 21:42:19', 'Administrator', '2023-05-23 21:42:19', 'Administrator'),
+(14, 1, 'Call me if you wants more money ?', '2023-05-23 21:45:24', 'Administrator', '2023-05-23 21:45:24', 'Administrator');
 
 -- --------------------------------------------------------
 
@@ -22661,7 +22664,7 @@ CREATE TABLE `model_info` (
 --
 
 INSERT INTO `model_info` (`id_model`, `model_name`, `model_class`, `description`) VALUES
-(1, 'Multi-layer Perceptron Classification', 'Sklearn', 'Default Multi-layer Perceptron Class'),
+(1, 'Multi-layer Perceptron Classification', 'Sklearn', 'Default Multi-layer Perceptron Class - 7 hidden'),
 (4, 'Support Vector Machine', 'Sklearn', 'Default From Sklearn'),
 (5, 'ANN', 'Numpy', 'Rebuild Model ANN'),
 (6, 'SVM Soft Margin', 'Numpy', 'Rebuild SVM'),
@@ -22669,7 +22672,11 @@ INSERT INTO `model_info` (`id_model`, `model_name`, `model_class`, `description`
 (8, 'SVM Kernel Linear', 'Sklearn', 'Gamma=1, Coef0 = 1'),
 (9, 'SVM Kernel Poly', 'Sklearn', 'Gamma=1, Coef0 = 1'),
 (10, 'SVM Kernel Sigmoid', 'Sklearn', 'Gamma=1, Coef0 = 1'),
-(11, 'SVM Kernel RBF', 'Sklearn', 'Gamma=1, Coef0 = 1');
+(11, 'SVM Kernel RBF', 'Sklearn', 'Gamma=1, Coef0 = 1'),
+(12, 'Gaussian Naive Bayes', 'Sklearn', 'Default in Sklearn'),
+(13, 'Bernoulli Naive Bayes', 'Sklearn', 'Default in Sklearn'),
+(14, 'Logistic Regression', 'Sklearn', 'Default in Sklearn'),
+(15, 'Decision Tree', 'Sklearn', 'Default in Sklearn');
 
 -- --------------------------------------------------------
 
@@ -22707,7 +22714,16 @@ INSERT INTO `model_train` (`id_train`, `id_model`) VALUES
 (18, 7),
 (19, 5),
 (20, 6),
-(21, 7);
+(21, 7),
+(22, 1),
+(23, 12),
+(24, 13),
+(25, 5),
+(26, 1),
+(27, 12),
+(28, 13),
+(29, 14),
+(30, 15);
 
 -- --------------------------------------------------------
 
@@ -22754,7 +22770,16 @@ INSERT INTO `model_train_state` (`id_train`, `id_dgroup`, `path_to_state`, `can_
 (18, 4, 'static/model/model_18.pickle', 0, 474.52, 0.8512, 0.8441, '2023-05-23 11:41:45', 'Administrator', '2023-05-23 11:41:45', 'Administrator'),
 (19, 5, 'static/model/model_19.pickle', 1, 30.1669, 0.8431, 0.8187, '2023-05-23 11:49:36', 'Administrator', '2023-05-23 11:57:28', 'Administrator'),
 (20, 5, 'static/model/model_20.pickle', 0, 2.2886, 0.49853, 0.5058, '2023-05-23 11:58:29', 'Administrator', '2023-05-23 11:58:29', 'Administrator'),
-(21, 5, 'static/model/model_21.pickle', 0, 23.3931, 0.49853, 0.50584, '2023-05-23 11:58:58', 'Administrator', '2023-05-23 11:58:58', 'Administrator');
+(21, 5, 'static/model/model_21.pickle', 0, 23.3931, 0.49853, 0.50584, '2023-05-23 11:58:58', 'Administrator', '2023-05-23 11:58:58', 'Administrator'),
+(22, 1, 'static/model/model_22.pickle', 1, 84.8479, 0.9996, 0.9883, '2023-05-24 10:40:32', 'Administrator', '2023-05-24 10:40:32', 'Administrator'),
+(23, 1, 'static/model/model_23.pickle', 0, 0.844, 0.9192, 0.8798, '2023-05-24 10:41:09', 'Administrator', '2023-05-24 10:41:09', 'Administrator'),
+(24, 1, 'static/model/model_24.pickle', 1, 1.5756, 0.9859, 0.9731, '2023-05-24 10:41:37', 'Administrator', '2023-05-24 10:41:37', 'Administrator'),
+(25, 3, 'static/model/model_25.pickle', 0, 261.452, 0.9219, 0.909, '2023-05-24 11:09:31', 'Administrator', '2023-05-24 11:09:31', 'Administrator'),
+(26, 3, 'static/model/model_26.pickle', 0, 50.1753, 0.9995, 0.9728, '2023-05-24 11:10:19', 'Administrator', '2023-05-24 11:10:19', 'Administrator'),
+(27, 3, 'static/model/model_27.pickle', 0, 0.6496, 0.9406, 0.8598, '2023-05-24 11:11:00', 'Administrator', '2023-05-24 11:11:00', 'Administrator'),
+(28, 3, 'static/model/model_28.pickle', 0, 0.5786, 0.9801, 0.9571, '2023-05-24 11:11:24', 'Administrator', '2023-05-24 11:11:24', 'Administrator'),
+(29, 3, 'static/model/model_29.pickle', 1, 1.3418, 0.9668, 0.9456, '2023-05-24 11:12:06', 'Administrator', '2023-05-24 11:12:06', 'Administrator'),
+(30, 3, 'static/model/model_30.pickle', 1, 10.2752, 1, 0.9592, '2023-05-24 11:12:36', 'Administrator', '2023-05-24 11:12:36', 'Administrator');
 
 -- --------------------------------------------------------
 
@@ -22900,7 +22925,7 @@ ALTER TABLE `data_group_info`
 -- AUTO_INCREMENT for table `data_input`
 --
 ALTER TABLE `data_input`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `data_train`
@@ -22912,7 +22937,7 @@ ALTER TABLE `data_train`
 -- AUTO_INCREMENT for table `model_info`
 --
 ALTER TABLE `model_info`
-  MODIFY `id_model` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_model` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `role`
